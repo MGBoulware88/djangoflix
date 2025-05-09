@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notflix</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/b00bdfc60f.js" crossorigin="anonymous"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'notflix/style.css' %}">
+    <script src="{% static 'notflix/script.js' %}"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary position-sticky top-0">
+        <container class="container-fluid">
+            <a class="navbar-brand text-primary" href="/">Notflix</a>
+            <!-- route guarded nav links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav color-primary">
+                    <li class="nav-item" id="navHome">
+                        <a class="nav-link" href="/home">Browse</a>
+                    </li>
+                    <li class="nav-item" id="navMovies">
+                        <a class="nav-link" href="/content/movies/all">Movies</a>
+                    </li>
+                    <li class="nav-item" id="navTV">
+                        <a class="nav-link" href="/content/tv/all">TV</a>
+                    </li>
+                    <li class="nav-item" id="navSearch">
+                        <a class="nav-link" href="/content/search">Search</a>
+                    </li>
+                    <li class="nav-item" id="navFavorites">
+                        <a class="nav-link" href="/users/{{ session['user_id'] }}/favorites">Favorites</a>
+                    </li>
+                    <li class="nav-item" id="nav2">
+                        <a class="nav-link" href="/users/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- end route guarded nav links -->
+        </container>
+    </nav>
+    <main class="py-4 px-5 mx-auto">
+        {% block content %}
+        
+        {% endblock %}
+    </main>
+</body>
+</html>
