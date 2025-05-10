@@ -2,3 +2,26 @@
     margin: 0;
     padding: 0;
 }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: rgb(8, 8, 8);
+        color: #fafafa;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: #fafafa;
+        color: rgb(8, 8, 8);
+    }
+}
+
+.sticky-table-header {
+    position: sticky;
+    top: 55px;
+}
+
+.clickable:hover {
+    cursor: pointer ;
+}

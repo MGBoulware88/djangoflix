@@ -1,0 +1,46 @@
+{% extends "djangoflix/base.html" %}
+
+{% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+
+<container class="container-fluid d-flex gap-2 justify-content-center align-content-center">
+    <div class="d-flex flex-column gap-3">
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <legend><h1>Login</h1></legend>
+            <table class="px-2">
+                <tr>
+                    <td>{{ form.username.label_tag }}</td>
+                    <td>{{ form.username }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.password.label_tag }}</td>
+                    <td>{{ form.password }}</td>
+                </tr>
+            </table>
+            <br>
+            <span class="d-flex justify-content-end">
+                <input type="submit" value="Login" class="btn btn-success">
+            </span>
+            <input type="hidden" name="next" value="{{ next }}">
+        </form>
+        
+        <p>Lost password? Get a <a href="{% url 'password_reset' %}">password reset</a></p>
+        <!-- TODO: Add registration -->
+        <p>Not signed up yet? <a href="#">Register</a> instead</p>
+    </div>     
+</container>
+
+{% endblock %}
