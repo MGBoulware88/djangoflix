@@ -41,8 +41,19 @@ def register(request):
 def login_user(request):
     if request.method == "GET":
         login_form = LoginForm()
+        if "logout" in request.session:
+            del request.session["logout"]
+            context = {
+                "logout": True,
+                "form": login_form,
+            }
+        else:
+            context = {
+                "logout": False,
+                "form": login_form,
+            }
 
-        return render(request, "registration/login.html", {"form": login_form})
+        return render(request, "registration/login.html", context)
     
     login_form = LoginForm(request.POST)
     if not login_form.is_valid():
@@ -77,6 +88,8 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
+
+    request.session["logout"] = True
 
     return redirect("accounts:login")
 

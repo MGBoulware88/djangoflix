@@ -2,13 +2,13 @@
 
 {% block content %}
 
-{% if success %}
+{% if logout %}
     <div class="d-flex justify-content-center text-info">
         <p>You are now logged out.</p>
     </div>
 {% endif %}
 
-<container class="card col-5 bg-body-secondary mx-auto p-2">
+<container class="card col-4 bg-body-secondary mx-auto p-2">
     <h1 class="text-primary">Login</h1>
     <form method="post" action="{% url 'accounts:login' %}">
         {% csrf_token %}
