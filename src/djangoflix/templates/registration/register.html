@@ -1,16 +1,9 @@
 {% extends "djangoflix/base.html" %}
 
 {% block content %}
-
-{% if success %}
-    <div class="d-flex justify-content-center text-info">
-        <p>You are now logged out.</p>
-    </div>
-{% endif %}
-
-<container class="card col-5 bg-body-secondary mx-auto p-2">
-    <h1 class="text-primary">Login</h1>
-    <form method="post" action="{% url 'accounts:login' %}">
+<container class="card col-3 bg-body-secondary mx-auto p-2">
+    <h1 class="text-primary fs-2">Create Account</h1>
+    <form action="{% url 'accounts:register' %}" method="POST">
         {% csrf_token %}
         <div class="d-flex flex-column gap-1 justify-content-start mx-auto fs-5">
             {% if form.non_field_errors %}
@@ -34,14 +27,9 @@
             
                 {% endfor %}
         </div>
-
-        <!-- <span class="d-flex justify-content-end align-items-baseline">
+        <span class="d-flex justify-content-end align-items-baseline">
             <input type="submit" value="Sign Up" class="btn btn-success mt-2">
-        </span> -->
-        <p class="float-start mt-3 mb-0">Not signed up yet? <a href="{% url 'accounts:register' %}">Register</a> instead</p>
-        <input type="submit" value="Login" class="btn btn-success mt-2 float-end">
-
+        </span>
     </form>
 </container>
-
 {% endblock %}

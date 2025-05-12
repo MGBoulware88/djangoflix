@@ -1,0 +1,19 @@
+{% extends "djangoflix/base.html" %}
+
+{% block content %}
+{% if profiles %}
+<h1 class="text-primary">Who is watching djaNgoflix today?</h1>
+
+<!-- display profiles in a 1x5 grid -->
+<!-- display giant + button to add if not 5 profiles -->
+
+{% else %}
+<h1 class="text-primary">Create a Profile to enjoy djaNgoflix</h1>
+
+<!-- display giant + button to add first profile -->
+
+
+
+
+{% endif %}
+{% endblock %}
