@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
-from .forms import RegistrationForm, LoginForm, ProfileForm
+from .forms import RegistrationForm, LoginForm
 from djangoflix.models import Account
 
 
@@ -83,8 +83,6 @@ def login_user(request):
         reverse_lazy("djangoflix:profiles")
     )
 
-    
-
 
 def logout_user(request):
     logout(request)
@@ -92,7 +90,3 @@ def logout_user(request):
     request.session["logout"] = True
 
     return redirect("accounts:login")
-
-
-def profile(request):
-    pass

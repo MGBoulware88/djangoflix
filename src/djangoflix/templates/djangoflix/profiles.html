@@ -1,19 +1,83 @@
 {% extends "djangoflix/base.html" %}
-
+{% load static %}
 {% block content %}
+
 {% if profiles %}
-<h1 class="text-primary">Who is watching djaNgoflix today?</h1>
 
 <!-- display profiles in a 1x5 grid -->
-<!-- display giant + button to add if not 5 profiles -->
+<container class="container-md text-center justify-content-center">
+    <h1 class="text-primary">Welcome back to djaNgoflix, {{ request.session.username }}</h1>
+    <br>
+    <h3>Who is watching djaNgoflix today?</h3>
+    <hr>
+    
+    <div class="row text-center justify-content-center">
+    {% for profile in profiles %}
+        <div class="col">
+            <form action="djangoflix/profiles/{{ profile.id }}" method="POST">
+                <button class="btn btn-outline-light rounded-circle" type="submit"><img src="{% static 'djangoflix/images/default.png' %}" height="60"></button>
+            </form>
+        </div>
+        {% if forloop.last and forloop.counter < 5 %}
+        <div class="col align-content-center">
+            <button class="btn btn-lg btn-outline-light rounded-circle"><i class="fa-solid fa-plus text-success"></i></button>
+        </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+    <div class="row">
+    {% for profile in profiles %}
+        <div class="col">
+            <p>{{ profile.profile_name }}</p>
+        </div>
+        {% if forloop.last and forloop.counter < 5 %}
+        <div class="col">
+            <p class="text-success">Add profile</p>
+        </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+ </container>
 
 {% else %}
-<h1 class="text-primary">Create a Profile to enjoy djaNgoflix</h1>
-
-<!-- display giant + button to add first profile -->
-
-
-
+<container class="container-sm text-center justify-content-center">
+    <h1 class="text-primary">Welcome to djaNgoflix, {{ request.session.username }}</h1>
+    <br>
+    <h3 class="text-warning">Create a Profile to enjoy djaNgoflix</h3>
+    <hr>
+    <div class="d-flex justify-content-center align-content-center mx-auto w-25">
+        <div class="container-sm">
+            <form method="post" action="{% url 'djangoflix:profiles' %}">
+                {% csrf_token %}
+                <div class="d-flex flex-column gap-1 justify-content-start mx-auto fs-5">
+                {% if form.non_field_errors %}
+                    <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
+                {% endif %}
+                    
+                {% for field in form.visible_fields %}
+                    {% if field.errors %}
+                        <ul class="text-danger">
+                        {% for error in field.errors %}
+                            <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    
+                    {{ field.label_tag }} {{ field }}
+                    
+                    {% if field.help_text %}
+                        <i class="fs-6 lh-sm">{{ field.help_text|safe }}</i>
+                    {% endif %}
+                {% endfor %}
+                </div>
+                {% for field in form.hidden_fields %}
+                    {{ field }}
+                {% endfor %}
+                <input type="submit" value="Save" class="btn btn-success mt-2 float-end">
+            </form>
+        </div>
+    </div>
+</container>
 
 {% endif %}
 {% endblock %}

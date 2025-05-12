@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
+from djangoflix.models import Account, Profile
+
 
 class RegistrationForm(forms.Form):
     username = forms.CharField(min_length=3, max_length=30)
@@ -52,7 +54,6 @@ class RegistrationForm(forms.Form):
             )
 
 
-
 class LoginForm(forms.Form):
     username = forms.CharField(min_length=3, max_length=30)
     password = forms.CharField(
@@ -62,9 +63,33 @@ class LoginForm(forms.Form):
     )
 
 
-class ProfileForm(forms.Form):
-    profile_name = forms.CharField(min_length=3, max_length=16)
-    profile_icon = forms.ChoiceField()
+class ProfileForm(forms.ModelForm):
+    # TODO: Set default profile icon
+    #profile_icon = forms.ChoiceField()
 
+    class Meta:
+        model = Profile
+        fields = ["account", "profile_name"]
+        help_text = {
+            "profile_name": "Max 16 characters.",
+        }
+        widgets = {
+            "account": forms.HiddenInput,
+        }
+
+    # Profile names are not unique in the database schema,
+    # but must be unique per Account
+    def clean(self):
+        cleaned_data = super().clean()
+        profile_name = cleaned_data["profile_name"]
+        this_account_id: int = cleaned_data["account"].id
+        this_account = Account.get_one_account_by_id(this_account_id)
+        # The __iexact filter may not function properly in SQLite
+        # if the profile_name includes chars 'outside the ASCII range'
+        used_name = this_account.profiles.filter(
+            profile_name__iexact=profile_name
+        ).first()
+        if used_name:
+            raise ValidationError("That profile name is already in use.")
 
 # TODO: Add password/username recovery forms

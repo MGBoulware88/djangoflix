@@ -6,26 +6,26 @@
     <form action="{% url 'accounts:register' %}" method="POST">
         {% csrf_token %}
         <div class="d-flex flex-column gap-1 justify-content-start mx-auto fs-5">
-            {% if form.non_field_errors %}
-               <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
+        {% if form.non_field_errors %}
+            <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
+        {% endif %}
+        
+        {% for field in form.visible_fields %}
+            {% if field.errors %}
+                <ul class="text-danger">
+                {% for error in field.errors %}
+                    <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
+                {% endfor %}
+                </ul>
             {% endif %}
             
-            {% for field in form.visible_fields %}
-                {% if field.errors %}
-                    <ul class="text-danger">
-                    {% for error in field.errors %}
-                        <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-                
-                {{ field.label_tag }} {{ field }}
-                
-                {% if field.help_text %}
-                    <i class="fs-6 lh-sm">{{ field.help_text|safe }}</i>
-                {% endif %}
+            {{ field.label_tag }} {{ field }}
             
-                {% endfor %}
+            {% if field.help_text %}
+                <i class="fs-6 lh-sm">{{ field.help_text|safe }}</i>
+            {% endif %}
+        
+        {% endfor %}
         </div>
         <p class="float-start mt-3 mb-0 fs-6"><i>Already signed up? </i><a href="{% url 'accounts:login' %}">Login</a></p>
         <input type="submit" value="Sign Up" class="btn btn-success mt-2 float-end">

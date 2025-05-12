@@ -20,6 +20,9 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav color-primary">
                     <li class="nav-item" id="navHome">
+                        <a class="nav-link" href="{% url 'djangoflix:home' %}">Home</a>
+                    </li>
+                    <li class="nav-item" id="navBrowse">
                         <a class="nav-link" href="{% url 'djangoflix:browse' %}">Browse</a>
                     </li>
                     <li class="nav-item" id="navMovies">
@@ -28,15 +31,18 @@
                     <li class="nav-item" id="navTV">
                         <a class="nav-link" href="{% url 'djangoflix:tv' %}">TV</a>
                     </li>
+                    <li class="nav-item" id="navFavorites">
+                        <a class="nav-link" href="{% url 'djangoflix:favorites' %}">Favorites</a>
+                    </li>
                     <li class="nav-item" id="navSearch">
                         <a class="nav-link" href="{% url 'djangoflix:search' %}">Search</a>
                     </li>
-                  <!-- TODO: Add Favorites Nav Link -->
-                    <li class="nav-item" id="nav2">
+                    <!-- <li class="nav-item float-end" id="navLogout">
                         <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
+            <p class="float-end mt-2"><a href="{% url 'accounts:logout' %}">Logout</a></p>
             {% endif %}
         </container>
     </nav>

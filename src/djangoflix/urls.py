@@ -8,6 +8,7 @@ urlpatterns = [
     path("", views.landing, name="landing"),
     path("home/", views.home, name="home"),
     path("profiles/", views.profiles, name="profiles"),
+    path("profiles/<int:id>/", views.select_profile, name="select_profile"),
     path("browse/", views.browse, name="browse"),
     path("movies/", views.movies, name="movies"),
     path("tv/", views.tv, name="tv"),

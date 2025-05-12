@@ -72,14 +72,14 @@ class Account(SharedData):
 
 
 class Profile(SharedData):
-    profile_name: str = models.CharField(max_length=45, unique=True)
+    profile_name: str = models.CharField(max_length=16)
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="profiles")
-    favorites = models.ManyToManyField(WatchableContent)
+    favorites = models.ManyToManyField(WatchableContent, null=True)
 
 
-    def __init__(self, data: dict) -> None:
-        self.profile_name = data["profile_name"]
-        self.account = data["account"]
+    # def __init__(self, data: dict) -> None:
+    #     self.profile_name = data["profile_name"]
+    #     self.account = data["account"]
 
 
     def __str__(self) -> str:
