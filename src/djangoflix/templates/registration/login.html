@@ -1,5 +1,4 @@
 {% extends "djangoflix/base.html" %}
-
 {% block content %}
 
 {% if logout %}
@@ -34,7 +33,7 @@
         
         {% endfor %}
         </div>
-        <p class="float-start mt-3 mb-0 fs-6"><i>Not signed up yet? </i><a href="{% url 'accounts:register' %}">Register</a> <i>today!</i></p>
+        <p class="float-start mt-3 mb-0 fs-6"><i>Not signed up yet? </i><a href="{% url 'accounts:register' %}">Sign Up</a> <i>today!</i></p>
         <input type="submit" value="Login" class="btn btn-success mt-2 float-end">
     </form>
 </container>

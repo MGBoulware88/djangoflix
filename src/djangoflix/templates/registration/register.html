@@ -1,6 +1,6 @@
 {% extends "djangoflix/base.html" %}
-
 {% block content %}
+
 <container class="card col-3 bg-body-secondary mx-auto p-2">
     <h1 class="text-primary fs-2">Create Account</h1>
     <form action="{% url 'accounts:register' %}" method="POST">
@@ -31,4 +31,5 @@
         <input type="submit" value="Sign Up" class="btn btn-success mt-2 float-end">
     </form>
 </container>
+
 {% endblock %}
