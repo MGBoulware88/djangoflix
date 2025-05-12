@@ -13,26 +13,16 @@
     
     <div class="row text-center justify-content-center">
     {% for profile in profiles %}
-        <div class="col">
+        <div class="col d-flex flex-column">
             <form action="djangoflix/profiles/{{ profile.id }}" method="POST">
                 <button class="btn btn-outline-light rounded-circle" type="submit"><img src="{% static 'djangoflix/images/default.png' %}" height="60"></button>
             </form>
-        </div>
-        {% if forloop.last and forloop.counter < 5 %}
-        <div class="col align-content-center">
-            <button class="btn btn-lg btn-outline-light rounded-circle"><i class="fa-solid fa-plus text-success"></i></button>
-        </div>
-        {% endif %}
-    {% endfor %}
-    </div>
-    <div class="row">
-    {% for profile in profiles %}
-        <div class="col">
             <p>{{ profile.profile_name }}</p>
         </div>
         {% if forloop.last and forloop.counter < 5 %}
-        <div class="col">
-            <p class="text-success">Add profile</p>
+        <div class="col align-content-center">
+            <button class="btn btn-lg btn-outline-light rounded-circle  px-4 py-3 mb-2"><i class="fa-solid fa-plus text-success"></i></button>
+            <p class="text-success float-none">Add profile</p>
         </div>
         {% endif %}
     {% endfor %}
