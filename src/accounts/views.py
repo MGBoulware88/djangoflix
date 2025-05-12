@@ -30,7 +30,7 @@ def register(request):
         request.session["username"] = new_user.username
         # Redirect to profiles page
         return redirect(
-            reverse_lazy("djangoflix:profiles", kwargs={"id": new_account.id})
+            reverse_lazy("djangoflix:profiles")
         )
     
     form = RegistrationForm()
@@ -80,7 +80,7 @@ def login_user(request):
     request.session["username"] = authenticated_user.username
 
     return redirect(
-        reverse_lazy("djangoflix:profiles", kwargs={"id": this_account.id})
+        reverse_lazy("djangoflix:profiles")
     )
 
     

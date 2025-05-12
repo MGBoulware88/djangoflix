@@ -13,7 +13,8 @@ def home(request):
     return HttpResponse("Hello, Home!")
 
 
-def profiles(request, id: int):
+def profiles(request):
+    id: int = request.session["account"]
     existing_profiles = Account.get_all_profiles_for_account_by_account_id(id)
     context = {"profiles": existing_profiles}
     
