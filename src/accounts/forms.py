@@ -70,7 +70,7 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ["account", "profile_name"]
-        help_text = {
+        help_texts = {
             "profile_name": "Max 16 characters.",
         }
         widgets = {
