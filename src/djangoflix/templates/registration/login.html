@@ -34,13 +34,8 @@
             
                 {% endfor %}
         </div>
-
-        <!-- <span class="d-flex justify-content-end align-items-baseline">
-            <input type="submit" value="Sign Up" class="btn btn-success mt-2">
-        </span> -->
-        <p class="float-start mt-3 mb-0">Not signed up yet? <a href="{% url 'accounts:register' %}">Register</a> instead</p>
+        <p class="float-start mt-3 mb-0 fs-6"><i>Not signed up yet? </i><a href="{% url 'accounts:register' %}">Register</a> <i>today!</i></p>
         <input type="submit" value="Login" class="btn btn-success mt-2 float-end">
-
     </form>
 </container>
 
