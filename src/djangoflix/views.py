@@ -21,8 +21,6 @@ def landing(request):
 
 ### Display Profiles after User logins to Account
 def profiles(request):
-    # TODO: Update POST logic to handle form errors on add w/ existing profiles
-    # currently, loads page with + button instead of form showing the errors
     if request.method == "POST":
         form = ProfileForm(request.POST)
         if not form.is_valid():
@@ -32,13 +30,17 @@ def profiles(request):
                 "form": form,
                 "profiles": existing_profiles,
             }
-            return render(request, "djangoflix/profiles.html", {"form": form})
+            return render(request, "djangoflix/profiles.html", context)
         
         form.save()
 
         return redirect(reverse_lazy("djangoflix:profiles"))
 
-    id: int = request.session["account"]
+    # handle case for user going to /profiles w/o proper login procedure
+    try:
+        id: int = request.session["account"]
+    except KeyError:
+        return redirect(reverse_lazy("accounts:login"))
     existing_profiles = Account.get_all_profiles_for_account_by_account_id(id)
     add_profile = ProfileForm(initial={"account": id})
     context = {

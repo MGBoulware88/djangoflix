@@ -20,42 +20,87 @@
             <p>{{ profile.profile_name }}</p>
         </div>
         {% if forloop.last and forloop.counter < 5 %}
-        <div class="col align-content-center" id="addProfileBtn">
-            <button class="btn btn-lg btn-outline-light rounded-circle px-4 py-3 mb-2" onclick="showProfileForm()">
-                <i class="fa-solid fa-plus text-success"></i>
-            </button>
-            <p class="text-success float-none">Add profile</p>
-        </div>
-        <div class="col align-content-center d-none" id="addProfileForm">
-            <form method="post" action="{% url 'djangoflix:profiles' %}">
-                {% csrf_token %}
-                <div class="d-flex flex-column gap-1 justify-content-start mx-auto fs-5">
-                {% if form.non_field_errors %}
-                    <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
-                {% endif %}
-                    
-                {% for field in form.visible_fields %}
-                    {% if field.errors %}
-                        <ul class="text-danger">
-                        {% for error in field.errors %}
-                            <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
-                        {% endfor %}
-                        </ul>
+            {% if form.is_bound %}
+            <div class="col align-content-center d-none" id="addProfileBtn">
+                <button class="btn btn-lg btn-outline-light rounded-circle px-4 py-3 mb-2" onclick="toggleProfileForm(true)">
+                    <i class="fa-solid fa-plus text-success"></i>
+                </button>
+                <p class="text-success float-none">Add profile</p>
+            </div>
+            <div class="col align-content-center" id="addProfileFormDiv">
+                <form method="post" action="{% url 'djangoflix:profiles' %}" id="addProfileForm">
+                    {% csrf_token %}
+                    <div class="d-flex flex-column gap-1 justify-content-start mx-auto fs-5">
+                    {% if form.non_field_errors %}
+                        <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
                     {% endif %}
-                    
-                    {{ field.label_tag }} {{ field }}
-                    
-                    {% if field.help_text %}
-                        <i class="fs-6 lh-sm">{{ field.help_text|safe }}</i>
-                    {% endif %}
-                {% endfor %}
+                        
+                    {% for field in form.visible_fields %}
+                        {% if field.errors %}
+                            <ul class="text-danger">
+                            {% for error in field.errors %}
+                                <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                        
+                        {{ field.label_tag }} {{ field }}
+                        
+                        {% if field.help_text %}
+                            <i class="fs-6 lh-sm">{{ field.help_text|safe }}</i>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                    {% for field in form.hidden_fields %}
+                        {{ field }}
+                    {% endfor %}
+                </form>
+                <div class="d-flex gap-2 justify-content-end">
+                    <input type="submit" value="Save" class="btn btn-success" onclick="submitForm()">
+                    <button class="btn btn-danger" onclick="toggleProfileForm(false)" >Cancel</button>
                 </div>
-                {% for field in form.hidden_fields %}
-                    {{ field }}
-                {% endfor %}
-                <input type="submit" value="Save" class="btn btn-success mt-2 float-end">
-            </form>
-        </div>
+            </div>
+            {% else %}
+            <div class="col align-content-center" id="addProfileBtn">
+                <button class="btn btn-lg btn-outline-light rounded-circle px-4 py-3 mb-2" onclick="toggleProfileForm(true)">
+                    <i class="fa-solid fa-plus text-success"></i>
+                </button>
+                <p class="text-success float-none">Add profile</p>
+            </div>
+            <div class="col align-content-center d-none" id="addProfileFormDiv">
+                <form method="post" action="{% url 'djangoflix:profiles' %}" id="addProfileForm">
+                    {% csrf_token %}
+                    <div class="d-flex flex-column gap-1 justify-content-start mx-auto fs-5">
+                    {% if form.non_field_errors %}
+                        <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
+                    {% endif %}
+                        
+                    {% for field in form.visible_fields %}
+                        {% if field.errors %}
+                            <ul class="text-danger">
+                            {% for error in field.errors %}
+                                <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                        
+                        {{ field.label_tag }} {{ field }}
+                        
+                        {% if field.help_text %}
+                            <i class="fs-6 lh-sm">{{ field.help_text|safe }}</i>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                    {% for field in form.hidden_fields %}
+                        {{ field }}
+                    {% endfor %}
+                </form>
+                <div class="d-flex gap-2 justify-content-end">
+                    <input type="submit" value="Save" class="btn btn-success" onclick="submitForm()">
+                    <button class="btn btn-danger" onclick="toggleProfileForm(false)" >Cancel</button>
+                </div>
+            </div>
+            {% endif %}
         {% endif %}
     {% endfor %}
     </div>
@@ -69,7 +114,7 @@
     <hr>
     <div class="d-flex justify-content-center align-content-center mx-auto w-25">
         <div class="container-sm">
-            <form method="post" action="{% url 'djangoflix:profiles' %}">
+            <form method="post" action="{% url 'djangoflix:profiles' %}" id="addProfileForm">
                 {% csrf_token %}
                 <div class="d-flex flex-column gap-1 justify-content-start mx-auto fs-5">
                 {% if form.non_field_errors %}
