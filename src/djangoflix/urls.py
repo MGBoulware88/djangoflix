@@ -12,7 +12,7 @@ urlpatterns = [
     path("browse/", views.browse, name="browse"),
     path("movies/", views.movies, name="movies"),
     path("tv/", views.tv, name="tv"),
-    path("search/", views.search, name="search"),
     path("favorites/", views.favorites, name="favorites"),
+    path("search/", views.search, name="search"),
     path("details/<int:content_id>/", views.details, name="details"),
 ]

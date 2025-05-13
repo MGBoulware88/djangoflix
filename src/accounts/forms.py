@@ -38,6 +38,7 @@ class RegistrationForm(forms.Form):
                 "Username taken. Please try another.",
                 code="username",
             )
+        
         email = cleaned_data.get("email")
         existing_user = User.objects.filter(email=email).first()
         if existing_user:
@@ -51,7 +52,7 @@ class RegistrationForm(forms.Form):
         if not password == confirm_password:
             raise ValidationError(
                 "Password and Confirm password must match.",
-                code=password,
+                code="password",
             )
 
 
@@ -75,12 +76,14 @@ class LoginForm(forms.Form):
         username = cleaned_data["username"]
         password = cleaned_data["password"]
         print(f"LoginForm self.request:\n{self.request}\n")
-        authenticated_user = authenticate(self.request, username=username, password=password)
+        authenticated_user = authenticate(
+            self.request,
+            username=username,
+            password=password
+        )
 
         if not authenticated_user:
-            raise ValidationError("Invalid credentials.")
-
-
+            raise ValidationError("Invalid credentials.", code="credentials")
 
 
 class ProfileForm(forms.ModelForm):
@@ -110,6 +113,6 @@ class ProfileForm(forms.ModelForm):
             profile_name__iexact=profile_name
         ).first()
         if used_name:
-            raise ValidationError("That profile name is already in use.")
+            raise ValidationError("That profile name is already in use.", code="used_name")
 
 # TODO: Add password/username recovery forms

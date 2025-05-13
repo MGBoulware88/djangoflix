@@ -23,8 +23,7 @@ def register(request):
         # Log the new user in so they are stored in session
         login(request, new_user)
         # Create Account, assign this user
-        new_account = Account(user=new_user)
-        new_account.save()
+        new_account = Account.create_account(new_user)
         # Add new_account to session
         request.session["account"] = new_account.id
         request.session["username"] = new_user.username
@@ -61,18 +60,25 @@ def login_user(request):
             request, "registration/login.html", context={"form": login_form}
         )
     
-    # LoginForm.clean already preforms this, but I still need a User
+    # LoginForm.clean() already preforms this, but I still need a User
     authenticated_user = authenticate(
         request,
         username=login_form.cleaned_data["username"],
         password=login_form.cleaned_data["password"],
     )
-
     login(request, authenticated_user)
-    this_account = Account.objects.filter(user=authenticated_user.id).first()
-    if not this_account:
-        # TODO: handle failed account lookup after valid user
-        pass
+
+    try:
+        this_account = Account.get_one_account_by_user_id(authenticated_user.id)
+        # If Account.DoesNotExist, prev method returns None in that case
+        # that should mean this is a 'staff user' we can safely redirect to
+        # admin:index because it blocks unauthed acccess
+        if not this_account:
+            return redirect(reverse_lazy("admin:index"))
+        
+    # If Account.MultipleObjectsReturned something terrible has happened
+    except Account.MultipleObjectsReturned:
+        print(f"***\nThis id found multiple accounts:\n{id}")
     
     request.session["account"] = this_account.id
     request.session["username"] = authenticated_user.username

@@ -41,10 +41,23 @@ class Account(SharedData):
         try:
             this_account = cls.objects.get(pk=id)
             return this_account
-        except (KeyError, cls.DoesNotExist):
+        except cls.DoesNotExist:
             return None
+        except cls.MultipleObjectsReturned:
+            print(f"***\nThis id found multiple accounts:\n{id}")
+       
+
+    @classmethod
+    def get_one_account_by_user_id(cls, user_id: int):
+        try:
+            this_account = cls.objects.get(user=user_id)
+            return this_account
+        except cls.DoesNotExist:
+            return None
+        except cls.MultipleObjectsReturned:
+            print(f"***\nThis user found multiple accounts:\n{user_id}")
     
-    
+
     @classmethod
     def get_all_profiles_for_account_by_account_id(cls, account_id: int):
         valid_account = cls.get_one_account_by_id(account_id)
@@ -58,6 +71,12 @@ class Account(SharedData):
         except Exception as e:
             print(e)
             return None
+    
+
+    @classmethod
+    def create_account(cls, user: User):
+        new_account = cls.objects.create(user=user)
+        return new_account
 
 
     ### Account instance methods
@@ -76,24 +95,37 @@ class Profile(SharedData):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="profiles")
     favorites = models.ManyToManyField(WatchableContent)
 
-
-    # def __init__(self, data: dict) -> None:
-    #     self.profile_name = data["profile_name"]
-    #     self.account = data["account"]
-
-
     def __str__(self) -> str:
         return self.profile_name
     
 
-    ### Profile class methods et all
+    ### Profile class methods et all   
     @classmethod
-    def get_one_profile_by_name(cls, name: str):
+    def get_one_profile_by_id(cls, id: int):
         try:
-            this_profile = cls.objects.get(profile_name__exact=name)
+            this_profile = cls.objects.get(pk=id)
             return this_profile
-        except (KeyError, cls.DoesNotExist):
+        except (cls.DoesNotExist):
             return None
+    
 
     ### Profile instance methods et all
-    
+    def get_favorites(self):
+        try:
+            favorites = []
+            queryset = self.favorites.all()
+            # From Django docs, count() definition:
+            # '. . .you should always use count() rather than loading all of
+            # the record into Python objects and calling len() on the result 
+            # (unless you need to load the objects into memory anyway, 
+            # in which case len() will be faster).'
+            if len(queryset) == 0:
+                return None
+            
+            for favorite in queryset:
+                favorites.append(favorite)
+            
+            return favorites
+        except Exception as e:
+            print(f"\nget_favorites for {self.id} failed with error:\n{e}")
+            return None

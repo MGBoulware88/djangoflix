@@ -3,12 +3,17 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseNotAllowed
 
 from accounts.forms import ProfileForm
-from .models import Account
+from .models import Account, Profile, WatchableContent
 
 
 ### landing, pre-login/reg to djangoflix/
 ### Also used when redirected from / url
 def landing(request):
+    if "profile" in request.session:
+        return redirect("djangoflix:home")
+    elif "account" in request.session:
+        return redirect("djangoflix:profiles")
+    
     return render(request, "djangoflix/landing.html")
 
 
@@ -16,6 +21,8 @@ def landing(request):
 
 ### Display Profiles after User logins to Account
 def profiles(request):
+    # TODO: Update POST logic to handle form errors on add w/ existing profiles
+    # currently, loads page with + button instead of form showing the errors
     if request.method == "POST":
         form = ProfileForm(request.POST)
         if not form.is_valid():
@@ -25,7 +32,6 @@ def profiles(request):
                 "form": form,
                 "profiles": existing_profiles,
             }
-
             return render(request, "djangoflix/profiles.html", {"form": form})
         
         form.save()
@@ -56,7 +62,27 @@ def select_profile(request, id: int):
 
 
 def home(request):
-    return HttpResponse("Hello, Home!")
+    # Handle case for user manually going to /home w/o proper login procedure
+    try:
+        this_profile = Profile.get_one_profile_by_id(request.session["profile"])
+    # KeyError catches login skippers, DoesNotExist catches invalid session data
+    except (KeyError, Profile.DoesNotExist):
+        if not "account" in request.session:
+            # Send them to the login page, not register
+            # If they are trying to get to home, they probably have an account
+            return redirect(reverse_lazy("accounts:login"))
+        elif not "profile" in request.session:
+            return redirect(reverse_lazy("djangoflix:profiles"))
+        else:
+            return redirect(reverse_lazy("djangoflix:landing"))
+    
+    favorites = this_profile.get_favorites()
+    context = {
+        "profile": this_profile,
+        "favorites": favorites,
+    }
+    
+    return render(request, "djangoflix/home.html", context)
 
 
 def browse(request):
