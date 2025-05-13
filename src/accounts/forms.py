@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
@@ -61,6 +62,25 @@ class LoginForm(forms.Form):
         max_length=50,
         widget=forms.PasswordInput,
     )
+
+    ## Overriding __init__ to pass current request to clean
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
+        super().__init__(*args, **kwargs)
+
+
+    # Overriding clean to add invalid credentials to form.non_field_errors
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data["username"]
+        password = cleaned_data["password"]
+        print(f"LoginForm self.request:\n{self.request}\n")
+        authenticated_user = authenticate(self.request, username=username, password=password)
+
+        if not authenticated_user:
+            raise ValidationError("Invalid credentials.")
+
+
 
 
 class ProfileForm(forms.ModelForm):

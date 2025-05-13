@@ -54,21 +54,19 @@ def login_user(request):
             }
 
         return render(request, "registration/login.html", context)
-    
-    login_form = LoginForm(request.POST)
+
+    login_form = LoginForm(request.POST, request=request)
     if not login_form.is_valid():
         return render(
             request, "registration/login.html", context={"form": login_form}
         )
     
+    # LoginForm.clean already preforms this, but I still need a User
     authenticated_user = authenticate(
         request,
         username=login_form.cleaned_data["username"],
         password=login_form.cleaned_data["password"],
     )
-    if not authenticated_user:
-        # TODO: Handle failed login after valid form
-        pass
 
     login(request, authenticated_user)
     this_account = Account.objects.filter(user=authenticated_user.id).first()

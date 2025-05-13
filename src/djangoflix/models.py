@@ -74,7 +74,7 @@ class Account(SharedData):
 class Profile(SharedData):
     profile_name: str = models.CharField(max_length=16)
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="profiles")
-    favorites = models.ManyToManyField(WatchableContent, null=True)
+    favorites = models.ManyToManyField(WatchableContent)
 
 
     # def __init__(self, data: dict) -> None:

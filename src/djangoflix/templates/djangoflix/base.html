@@ -16,7 +16,7 @@
     <nav class="navbar navbar-expand-lg bg-body-secondary position-sticky top-0">
         <container class="container-fluid">
             <a class="navbar-brand text-primary" href="{% url 'djangoflix:home' %}"><img src="{% static 'djangoflix/images/favicon.png' %}" height="40"></a>
-            {% if request.session.account %}
+            {% if request.session.profile %}
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav color-primary">
                     <li class="nav-item" id="navHome">
@@ -42,6 +42,7 @@
                     </li> -->
                 </ul>
             </div>
+            {% elif request.session.account %}
             <p class="float-end mt-2"><a href="{% url 'accounts:logout' %}">Logout</a></p>
             {% else %}
             <div class="float-end d-flex justify-content-between gap-1 align-content-center">
