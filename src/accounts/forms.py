@@ -75,7 +75,7 @@ class LoginForm(forms.Form):
         cleaned_data = super().clean()
         username = cleaned_data["username"]
         password = cleaned_data["password"]
-        print(f"LoginForm self.request:\n{self.request}\n")
+        
         authenticated_user = authenticate(
             self.request,
             username=username,

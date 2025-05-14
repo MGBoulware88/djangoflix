@@ -8,12 +8,20 @@
         background-color: rgb(8, 8, 8);
         color: #fafafa;
     }
+
+    .dynamic-border {
+        border: 0.15rem solid #495057;
+    }
 }
 
 @media (prefers-color-scheme: light) {
     body {
         background-color: #fafafa;
         color: rgb(8, 8, 8);
+    }
+
+    .dynamic-border {
+        border: 0.15rem solid #181818;
     }
 }
 

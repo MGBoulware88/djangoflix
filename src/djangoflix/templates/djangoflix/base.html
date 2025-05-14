@@ -13,7 +13,7 @@
     <script src="{% static 'djangoflix/script.js' %}"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-secondary position-sticky top-0">
+    <nav data-bs-theme="dark" class="navbar navbar-expand-lg bg-body-secondary position-sticky top-0">
         <container class="container-fluid">
             <a class="navbar-brand text-primary" href="{% url 'djangoflix:landing' %}" id="navbarBrand">
                 <img src="{% static 'djangoflix/images/favicon.png' %}" height="40">
@@ -39,12 +39,11 @@
                     <li class="nav-item" id="navSearch">
                         <a class="nav-link" href="{% url 'djangoflix:search' %}">Search</a>
                     </li>
-                    <!-- <li class="nav-item float-end" id="navLogout">
-                        <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
-                    </li> -->
                 </ul>
             </div>
-            <p class="float-end mt-2"><a href="{% url 'accounts:logout' %}">Logout</a></p>
+            <div class="float-end me-2">
+               <i class="fa-solid fa-user clickable" id="navDropdownBtn" onclick="toggleNavDropdown(this)" role="menu" type="button" aria-expanded="false"></i>
+            </div>
             {% elif request.session.account %}
             <p class="float-end mt-2"><a href="{% url 'accounts:logout' %}">Logout</a></p>
             {% else %}
@@ -57,6 +56,16 @@
             {% endif %}
         </container>
     </nav>
+    {% if request.session.profile %}
+    <div data-bs-theme="dark" class="position-relative d-none" id="navDropdown">
+       <div class="bg-body-secondary dynamic-border position-absolute top-0 end-0">
+            <ul class="p-2">
+                <li class="dropdown-item"><a href="{% url 'djangoflix:profiles' %}">Switch Profile</a></li>
+                <li class="dropdown-item"><a href="{% url 'accounts:logout' %}">Logout</a></li>
+            </ul>
+       </div>
+    </div>
+    {% endif %}
     <main class="py-4 px-5 mx-auto">
         {% block content %}
         

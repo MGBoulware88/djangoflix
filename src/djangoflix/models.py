@@ -26,7 +26,7 @@ class WatchableContent(SharedData):
 
 
 class Account(SharedData):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user: int = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     activation_date: datetime = models.DateTimeField(null=True, auto_now_add=True)
     active: bool = models.BooleanField(default=True)
 
