@@ -105,7 +105,7 @@ class Profile(SharedData):
         try:
             this_profile = cls.objects.get(pk=id)
             return this_profile
-        except (cls.DoesNotExist):
+        except cls.DoesNotExist:
             return None
     
 

@@ -62,11 +62,12 @@ def select_profile(request, id: int):
     return redirect(reverse_lazy("djangoflix:home"))
 
 
-
 def home(request):
     # Handle case for user manually going to /home w/o proper login procedure
     try:
         this_profile = Profile.get_one_profile_by_id(request.session["profile"])
+        if not this_profile:
+            raise Profile.DoesNotExist
     # KeyError catches login skippers, DoesNotExist catches invalid session data
     except (KeyError, Profile.DoesNotExist):
         if not "account" in request.session:
@@ -76,7 +77,7 @@ def home(request):
         elif not "profile" in request.session:
             return redirect(reverse_lazy("djangoflix:profiles"))
         else:
-            return redirect(reverse_lazy("djangoflix:landing"))
+            return redirect(reverse_lazy("accounts:logout"))
     
     favorites = this_profile.get_favorites()
     context = {
