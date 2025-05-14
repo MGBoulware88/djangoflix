@@ -8,33 +8,37 @@ from djangoflix.models import Account
 
 
 def register(request):
-    if request.method == "POST":
-        reg_form = RegistrationForm(request.POST)
-        if not reg_form.is_valid():
-            return render(request, "registration/register.html", context={"form": reg_form})
-        
-        new_user = User.objects.create_user(
-            username=reg_form.cleaned_data["username"],
-            password=reg_form.cleaned_data["password"],
-        )
-        if not new_user:
-            # do something
-            pass
-        # Log the new user in so they are stored in session
-        login(request, new_user)
-        # Create Account, assign this user
-        new_account = Account.create_account(new_user)
-        # Add new_account to session
-        request.session["account"] = new_account.id
-        request.session["username"] = new_user.username
-        # Redirect to profiles page
-        return redirect(
-            reverse_lazy("djangoflix:profiles")
+    if request.method == "GET":
+        reg_form = RegistrationForm()
+
+        return render(
+            request,
+            "registration/register.html",
+            context={"form": reg_form}
         )
     
-    form = RegistrationForm()
-
-    return render(request, "registration/register.html", context={"form": form})
+    reg_form = RegistrationForm(request.POST)
+    if not reg_form.is_valid():
+        return render(
+            request,
+            "registration/register.html",
+            context={"form": reg_form}
+        )
+    # Anything that could cause create_user to fail 
+    # is handled via form validation
+    new_user = User.objects.create_user(
+        username=reg_form.cleaned_data["username"],
+        email=reg_form.cleaned_data["email"],
+        password=reg_form.cleaned_data["password"],
+    )
+    # Note: login adds user to session via request.user
+    login(request, new_user)
+    new_account = Account.create_account(new_user)
+    request.session["account"] = new_account.id
+    # User already in session, this is redundant
+    #request.session["username"] = new_user.username
+    
+    return redirect(reverse_lazy("djangoflix:profiles"))
 
 
 def login_user(request):
@@ -81,7 +85,8 @@ def login_user(request):
         print(f"***\nThis id found multiple accounts:\n{id}")
     
     request.session["account"] = this_account.id
-    request.session["username"] = authenticated_user.username
+    # User already in session, this is redundant
+    #request.session["username"] = new_user.username
 
     return redirect(
         reverse_lazy("djangoflix:profiles")

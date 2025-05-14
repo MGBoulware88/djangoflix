@@ -25,7 +25,8 @@
 
 .sticky-table-header {
     position: sticky;
-    top: 55px;
+    /* navbar has a 66px height */
+    top: 66px;
 }
 
 .clickable:hover {

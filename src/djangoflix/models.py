@@ -121,7 +121,7 @@ class Profile(SharedData):
             # in which case len() will be faster).'
             if len(queryset) == 0:
                 return None
-            
+            # TODO: Test if this loop is redundant and I can just return the queryset after len() call
             for favorite in queryset:
                 favorites.append(favorite)
             

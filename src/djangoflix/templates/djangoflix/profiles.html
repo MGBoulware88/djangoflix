@@ -108,7 +108,7 @@
 
 {% else %}
 <container class="container-sm text-center justify-content-center">
-    <h1 class="text-primary">Welcome to djaNgoflix, {{ request.session.username }}</h1>
+    <h1 class="text-primary">Welcome to djaNgoflix, {{ request.user.username }}</h1>
     <br>
     <h3 class="text-warning">Create a Profile to enjoy djaNgoflix</h3>
     <hr>
