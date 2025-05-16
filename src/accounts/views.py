@@ -35,8 +35,6 @@ def register(request):
     login(request, new_user)
     new_account = Account.create_account(new_user)
     request.session["account"] = new_account.id
-    # User already in session, this is redundant
-    #request.session["username"] = new_user.username
     
     return redirect(reverse_lazy("djangoflix:profiles"))
 
@@ -72,21 +70,14 @@ def login_user(request):
     )
     login(request, authenticated_user)
 
-    try:
-        this_account = Account.get_one_account_by_user_id(authenticated_user.id)
-        # If Account.DoesNotExist, prev method returns None in that case
-        # that should mean this is a 'staff user' we can safely redirect to
-        # admin:index because it blocks unauthed acccess
-        if not this_account:
-            return redirect(reverse_lazy("admin:index"))
+    this_account = Account.get_one_account_by_user_id(authenticated_user.id)
+    # If Account.DoesNotExist, prev method returns None
+    # that should mean this is a 'staff user' & we can safely redirect to
+    # admin:index because it blocks unauthed acccess
+    if not this_account:
+        return redirect(reverse_lazy("admin:index"))
         
-    # If Account.MultipleObjectsReturned something terrible has happened
-    except Account.MultipleObjectsReturned:
-        print(f"***\nThis id found multiple accounts:\n{id}")
-    
     request.session["account"] = this_account.id
-    # User already in session, this is redundant
-    #request.session["username"] = new_user.username
 
     return redirect(
         reverse_lazy("djangoflix:profiles")

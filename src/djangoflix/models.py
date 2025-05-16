@@ -43,8 +43,6 @@ class Account(SharedData):
             return this_account
         except cls.DoesNotExist:
             return None
-        except cls.MultipleObjectsReturned:
-            print(f"***\nThis id found multiple accounts:\n{id}")
        
 
     @classmethod
@@ -54,8 +52,6 @@ class Account(SharedData):
             return this_account
         except cls.DoesNotExist:
             return None
-        except cls.MultipleObjectsReturned:
-            print(f"***\nThis user found multiple accounts:\n{user_id}")
     
 
     @classmethod
