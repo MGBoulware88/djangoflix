@@ -4,6 +4,13 @@ from django.utils import timezone
 from datetime import date, datetime
 
 
+ICON_CHOICES = {
+    "default.png": "default.png",
+    "boy_brown.png": "boy_brown.png",
+    "girl_blue.png": "girl_blue.png",
+}
+
+
 class SharedData(models.Model):
     created_at: datetime = models.DateTimeField(auto_now_add=True)
     updated_at: datetime = models.DateTimeField(null=True, auto_now=True)
@@ -93,7 +100,16 @@ class Account(SharedData):
 
 class Profile(SharedData):
     profile_name: str = models.CharField(max_length=16)
-    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="profiles")
+    icon: str = models.CharField(
+        max_length=30,
+        default="default.png",
+        choices=ICON_CHOICES,
+    )
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        related_name="profiles",
+    )
     favorites = models.ManyToManyField(WatchableContent)
 
     def __str__(self) -> str:

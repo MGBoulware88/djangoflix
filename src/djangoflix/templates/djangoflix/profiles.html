@@ -15,7 +15,9 @@
         <div class="col d-flex flex-column">
             <form action="{% url 'djangoflix:select_profile' id=profile.id %}" method="POST">
                 {% csrf_token %}
-                <button class="btn btn-outline-light rounded-circle" type="submit"><img src="{% static 'djangoflix/images/default.png' %}" height="60"></button>
+                <button class="btn btn-outline-light rounded-circle" type="submit">
+                    <img src="{% static 'djangoflix/images/' %}{{ profile.icon }}" height="60">
+                </button>
             </form>
             <p>{{ profile.profile_name }}</p>
         </div>
@@ -35,21 +37,19 @@
                         <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
                     {% endif %}
                         
-                    {% for field in form.visible_fields %}
-                        {% if field.errors %}
-                            <ul class="text-danger">
-                            {% for error in field.errors %}
-                                <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
-                            {% endfor %}
-                            </ul>
-                        {% endif %}
-                        
-                        {{ field.label_tag }} {{ field }}
-                        
-                        {% if field.help_text %}
-                            <i class="fs-6 lh-sm">{{ field.help_text|safe }}</i>
-                        {% endif %}
-                    {% endfor %}
+                    {% if form.profile_name.errors %}
+                        <ul class="text-danger">
+                        {% for error in form.profile_name.errors %}
+                            <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    
+                    {{ form.profile_name.label_tag }} {{ form.profile_name }}
+                    
+                    {% if form.profile_name.help_text %}
+                        <i class="fs-6 lh-sm">{{ form.profile_name.help_text|safe }}</i>
+                    {% endif %}
                     </div>
                     {% for field in form.hidden_fields %}
                         {{ field }}
@@ -75,21 +75,44 @@
                         <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
                     {% endif %}
                         
-                    {% for field in form.visible_fields %}
-                        {% if field.errors %}
-                            <ul class="text-danger">
-                            {% for error in field.errors %}
-                                <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
-                            {% endfor %}
-                            </ul>
-                        {% endif %}
-                        
-                        {{ field.label_tag }} {{ field }}
-                        
-                        {% if field.help_text %}
-                            <i class="fs-6 lh-sm">{{ field.help_text|safe }}</i>
-                        {% endif %}
-                    {% endfor %}
+                    {% if form.profile_name.errors %}
+                        <ul class="text-danger">
+                        {% for error in form.profile_name.errors %}
+                            <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    
+                    {{ form.profile_name.label_tag }} {{ form.profile_name }}
+                    
+                    {% if form.profile_name.help_text %}
+                        <i class="fs-6 lh-sm">{{ form.profile_name.help_text|safe }}</i>
+                    {% endif %}
+                    {% if form.icon.errors %}
+                        <ul class="text-danger">
+                        {% for error in form.icon.errors %}
+                            <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    
+                    {{ form.icon.label_tag }}
+                    
+                    {% if form.icon.help_text %}
+                        <i class="fs-6 lh-sm">{{ form.icon.help_text|safe }}</i>
+                    {% endif %}
+                        <div class="d-flex flex-wrap justify-content-start gap-2 mb-2">
+                        {% for value, img in form.icon.field.choices %}
+                            <div class="d-flex justify-content-center align-content-center gap-1">
+                                {% if forloop.first %}
+                                <input type="radio" name="{{ form.icon.name }}" value="{{ value }}" checked>
+                                {% else %}
+                                <input type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}">
+                                {% endif %}
+                                <img src="{% static 'djangoflix/images/' %}{{ img }}" height="60" id="icon{{ forloop.counter }}-img">
+                            </div>
+                        {% endfor %}
+                        </div>
                     </div>
                     {% for field in form.hidden_fields %}
                         {{ field }}
@@ -121,21 +144,44 @@
                     <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
                 {% endif %}
                     
-                {% for field in form.visible_fields %}
-                    {% if field.errors %}
-                        <ul class="text-danger">
-                        {% for error in field.errors %}
-                            <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                    
-                    {{ field.label_tag }} {{ field }}
-                    
-                    {% if field.help_text %}
-                        <i class="fs-6 lh-sm">{{ field.help_text|safe }}</i>
-                    {% endif %}
-                {% endfor %}
+                {% if form.profile_name.errors %}
+                    <ul class="text-danger">
+                    {% for error in form.profile_name.errors %}
+                        <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                
+                {{ form.profile_name.label_tag }} {{ form.profile_name }}
+                
+                {% if form.profile_name.help_text %}
+                    <i class="fs-6 lh-sm">{{ form.profile_name.help_text|safe }}</i>
+                {% endif %}
+                {% if form.icon.errors %}
+                    <ul class="text-danger">
+                    {% for error in form.icon.errors %}
+                        <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                
+                {{ form.icon.label_tag }}
+                
+                {% if form.icon.help_text %}
+                    <i class="fs-6 lh-sm">{{ form.icon.help_text|safe }}</i>
+                {% endif %}
+                    <div class="d-flex flex-wrap justify-content-start gap-2 mb-2">
+                    {% for value, img in form.icon.field.choices %}
+                        <div class="d-flex justify-content-center align-content-center gap-1">
+                            {% if forloop.first %}
+                            <input type="radio" name="{{ form.icon.name }}" value="{{ value }}" checked>
+                            {% else %}
+                            <input type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}">
+                            {% endif %}
+                            <img src="{% static 'djangoflix/images/' %}{{ img }}" height="60" id="icon{{ forloop.counter }}-img">
+                        </div>
+                    {% endfor %}
+                    </div>
                 </div>
                 {% for field in form.hidden_fields %}
                     {{ field }}

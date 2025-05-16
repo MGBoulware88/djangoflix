@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from djangoflix.models import Account, Profile
+from djangoflix.models import Account, Profile, ICON_CHOICES
 
 
 class RegistrationForm(forms.Form):
@@ -87,17 +87,19 @@ class LoginForm(forms.Form):
 
 
 class ProfileForm(forms.ModelForm):
-    # TODO: Set default profile icon
-    #profile_icon = forms.ChoiceField()
-
     class Meta:
         model = Profile
-        fields = ["account", "profile_name"]
+        fields = ["account", "profile_name", "icon"]
         help_texts = {
             "profile_name": "Max 16 characters.",
         }
+        labels = {
+            "profile_name": "Profile Name",
+            "icon": "Profile Icon",
+        }
         widgets = {
             "account": forms.HiddenInput,
+            "form": forms.RadioSelect(choices=ICON_CHOICES),
         }
 
     # Profile names are not unique in the database schema,

@@ -42,7 +42,7 @@ def profiles(request):
     except KeyError:
         return redirect(reverse_lazy("accounts:login"))
     existing_profiles = Account.get_all_profiles_for_account_by_account_id(id)
-    add_profile = ProfileForm(initial={"account": id})
+    add_profile = ProfileForm(initial={"account": id, "icon": "default.png"})
     context = {
         "form": add_profile,
         "profiles": existing_profiles,
