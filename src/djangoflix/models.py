@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-import datetime
+from datetime import date, datetime
 
 
 class SharedData(models.Model):
@@ -17,7 +17,7 @@ class WatchableContent(SharedData):
     content_type: str = models.CharField(max_length=15)
     genre: str = models.CharField(max_length=100)
     description: str = models.TextField()
-    release_date: datetime.date = models.DateField()
+    release_date: date = models.DateField()
     duration: int = models.PositiveIntegerField() # Movies stored in minutes, TV stored in seasons
 
 
@@ -26,8 +26,13 @@ class WatchableContent(SharedData):
 
 
 class Account(SharedData):
-    user: int = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    activation_date: datetime = models.DateTimeField(null=True, auto_now_add=True)
+    # stored in db as int, but returns User obj when accessed at runtime
+    user: User | None = models.OneToOneField(
+        User, on_delete=models.CASCADE, null=True
+    )
+    activation_date: datetime = models.DateTimeField(
+        null=True, auto_now_add=True
+    )
     active: bool = models.BooleanField(default=True)
 
 
@@ -78,7 +83,7 @@ class Account(SharedData):
     ### Account instance methods
     def activate_account(self) -> None:
         self.active = True
-        self.activation_date = datetime.now()
+        self.activation_date = timezone.now()
 
 
     def deactivate_account(self) -> None:

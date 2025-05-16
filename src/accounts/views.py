@@ -76,7 +76,7 @@ def login_user(request):
     # admin:index because it blocks unauthed acccess
     if not this_account:
         return redirect(reverse_lazy("admin:index"))
-        
+    
     request.session["account"] = this_account.id
 
     return redirect(
