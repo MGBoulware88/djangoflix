@@ -12,119 +12,88 @@
     <hr>
     <div class="row">
     {% for profile in profiles %}
+        <!-- show each profile -->
         <div class="col d-flex flex-column">
             <form action="{% url 'djangoflix:select_profile' id=profile.id %}" method="POST">
                 {% csrf_token %}
-                <button class="btn btn-outline-light rounded-circle" type="submit">
-                    <img src="{% static 'djangoflix/images/' %}{{ profile.icon }}" height="60">
+                <button class="btn btn-outline-light rounded-circle icon-btn" type="submit">
+                    <img class="icon-img" src="{% static 'djangoflix/images/icons/' %}{{ profile.icon }}" height="60" width="50">
                 </button>
             </form>
             <p>{{ profile.profile_name }}</p>
         </div>
+        <!-- show add profile form if not 5 profiles -->
         {% if forloop.last and forloop.counter < 5 %}
-            {% if form.is_bound %}
-            <div class="col align-content-center d-none" id="addProfileBtn">
-                <button class="btn btn-lg btn-outline-light rounded-circle px-4 py-3 mb-2" onclick="toggleProfileForm(true)">
-                    <i class="fa-solid fa-plus text-success"></i>
-                </button>
-                <p class="text-success float-none">Add profile</p>
-            </div>
-            <div class="col align-content-center" id="addProfileFormDiv">
-                <form method="post" action="{% url 'djangoflix:profiles' %}" id="addProfileForm">
-                    {% csrf_token %}
-                    <div class="d-flex flex-column gap-1 justify-content-start mx-auto fs-5">
-                    {% if form.non_field_errors %}
-                        <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
-                    {% endif %}
-                        
-                    {% if form.profile_name.errors %}
-                        <ul class="text-danger">
-                        {% for error in form.profile_name.errors %}
-                            <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                    
-                    {{ form.profile_name.label_tag }} {{ form.profile_name }}
-                    
-                    {% if form.profile_name.help_text %}
-                        <i class="fs-6 lh-sm">{{ form.profile_name.help_text|safe }}</i>
-                    {% endif %}
-                    </div>
-                    {% for field in form.hidden_fields %}
-                        {{ field }}
-                    {% endfor %}
-                </form>
-                <div class="d-flex gap-2 justify-content-end">
-                    <input type="submit" value="Save" class="btn btn-success" onclick="submitForm()">
-                    <button class="btn btn-danger" onclick="toggleProfileForm(false)" >Cancel</button>
-                </div>
-            </div>
-            {% else %}
-            <div class="col align-content-center" id="addProfileBtn">
-                <button class="btn btn-lg btn-outline-light rounded-circle px-4 py-3 mb-2" onclick="toggleProfileForm(true)">
-                    <i class="fa-solid fa-plus text-success"></i>
-                </button>
-                <p class="text-success float-none">Add profile</p>
-            </div>
-            <div class="col align-content-center d-none" id="addProfileFormDiv">
-                <form method="post" action="{% url 'djangoflix:profiles' %}" id="addProfileForm">
-                    {% csrf_token %}
-                    <div class="d-flex flex-column gap-1 justify-content-start mx-auto fs-5">
-                    {% if form.non_field_errors %}
-                        <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
-                    {% endif %}
-                        
-                    {% if form.profile_name.errors %}
-                        <ul class="text-danger">
-                        {% for error in form.profile_name.errors %}
-                            <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                    
-                    {{ form.profile_name.label_tag }} {{ form.profile_name }}
-                    
-                    {% if form.profile_name.help_text %}
-                        <i class="fs-6 lh-sm">{{ form.profile_name.help_text|safe }}</i>
-                    {% endif %}
-                    {% if form.icon.errors %}
-                        <ul class="text-danger">
-                        {% for error in form.icon.errors %}
-                            <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                    
-                    {{ form.icon.label_tag }}
-                    
-                    {% if form.icon.help_text %}
-                        <i class="fs-6 lh-sm">{{ form.icon.help_text|safe }}</i>
-                    {% endif %}
-                        <div class="d-flex flex-wrap justify-content-start gap-2 mb-2">
-                        {% for value, img in form.icon.field.choices %}
-                            <div class="d-flex justify-content-center align-content-center gap-1">
-                                {% if forloop.first %}
-                                <input type="radio" name="{{ form.icon.name }}" value="{{ value }}" checked>
-                                {% else %}
-                                <input type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}">
-                                {% endif %}
-                                <img src="{% static 'djangoflix/images/' %}{{ img }}" height="60" id="icon{{ forloop.counter }}-img">
-                            </div>
-                        {% endfor %}
-                        </div>
-                    </div>
-                    {% for field in form.hidden_fields %}
-                        {{ field }}
-                    {% endfor %}
-                </form>
-                <div class="d-flex gap-2 justify-content-end">
-                    <input type="submit" value="Save" class="btn btn-success" onclick="submitForm()">
-                    <button class="btn btn-danger" onclick="toggleProfileForm(false)" >Cancel</button>
-                </div>
-            </div>
-            {% endif %}
+        {% if form.is_bound %}
+        <div class="col align-content-center d-none" id="addProfileBtn">
+        {% else %}
+        <div class="col align-content-center" id="addProfileBtn">
         {% endif %}
+            <button class="btn btn-lg btn-outline-light rounded-circle px-4 py-3 mb-2" onclick="toggleProfileForm(true)">
+                <i class="fa-solid fa-plus text-success"></i>
+            </button>
+            <p class="text-success float-none">Add profile</p>
+        </div>
+        {% if form.is_bound %}
+        <div class="col align-content-center" id="addProfileFormDiv">
+        {% else %}
+        <div class="col align-content-center d-none" id="addProfileFormDiv">
+        {% endif %}
+            <form method="post" action="{% url 'djangoflix:profiles' %}" id="addProfileForm">
+                {% csrf_token %}
+                <div class="d-flex flex-column gap-1 justify-content-start mx-auto fs-5">
+                {% if form.non_field_errors %}
+                    <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
+                {% endif %}
+                <!-- profile name -->
+                {% if form.profile_name.errors %}
+                    <ul class="text-danger fs-6 mb-0 lh-sm">
+                    {% for error in form.profile_name.errors %}
+                        <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {{ form.profile_name.label_tag }} {{ form.profile_name }}
+                
+                {% if form.profile_name.help_text %}
+                    <i class="fs-6 lh-sm">{{ form.profile_name.help_text|safe }}</i>
+                {% endif %}
+                <!-- icon -->
+                {{ form.icon.label_tag }}
+
+                {% if form.icon.help_text %}
+                    <i class="fs-6 lh-sm">{{ form.icon.help_text|safe }}</i>
+                {% endif %}
+                    <div class="d-flex flex-wrap justify-content-start gap-2 mb-2">
+                    {% for value, img in form.icon.field.choices %}
+                        <div class="d-flex justify-content-center align-content-center gap-1">
+                            {% if forloop.first %}
+                            <input class="d-none" type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}" checked>
+                            <button class="btn btn-outline-primary rounded-circle icon-btn" type="button" id="icon{{ forloop.counter }}-btn" onclick="selectIcon(this)" >
+                                <img class="icon-img" src="{% static 'djangoflix/images/icons/' %}{{ img }}" height="60" width="50" id="icon{{ forloop.counter }}-img">
+                            </button>
+                            {% else %}
+                            <input class="d-none" type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}">
+                            <button class="btn btn-outline-light rounded-circle icon-btn" type="button" id="icon{{ forloop.counter }}-btn" onclick="selectIcon(this)" >
+                                <img class="icon-img" src="{% static 'djangoflix/images/icons/' %}{{ img }}" height="60" width="50" id="icon{{ forloop.counter }}-img">
+                            </button>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+                <!-- hidden Account field -->
+                {% for field in form.hidden_fields %}
+                    {{ field }}
+                {% endfor %}
+            </form>
+            <div class="d-flex gap-2 justify-content-end">
+                <input type="submit" value="Save" class="btn btn-success" onclick="submitForm()">
+                <button class="btn btn-danger" onclick="toggleProfileForm(false)" >Cancel</button>
+            </div>
+        </div>
+    {% endif %}
     {% endfor %}
     </div>
  </container>
@@ -143,7 +112,7 @@
                 {% if form.non_field_errors %}
                     <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
                 {% endif %}
-                    
+                <!-- profile name -->
                 {% if form.profile_name.errors %}
                     <ul class="text-danger">
                     {% for error in form.profile_name.errors %}
@@ -151,20 +120,13 @@
                     {% endfor %}
                     </ul>
                 {% endif %}
-                
+
                 {{ form.profile_name.label_tag }} {{ form.profile_name }}
                 
                 {% if form.profile_name.help_text %}
                     <i class="fs-6 lh-sm">{{ form.profile_name.help_text|safe }}</i>
                 {% endif %}
-                {% if form.icon.errors %}
-                    <ul class="text-danger">
-                    {% for error in form.icon.errors %}
-                        <li class="text-danger"><p class="text-danger">{{ error }}</p></li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-                
+                <!-- icon -->
                 {{ form.icon.label_tag }}
                 
                 {% if form.icon.help_text %}
@@ -174,11 +136,16 @@
                     {% for value, img in form.icon.field.choices %}
                         <div class="d-flex justify-content-center align-content-center gap-1">
                             {% if forloop.first %}
-                            <input type="radio" name="{{ form.icon.name }}" value="{{ value }}" checked>
+                            <input class="d-none" type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}" checked>
+                            <button class="btn btn-outline-primary rounded-circle icon-btn" type="button" id="icon{{ forloop.counter }}-btn" onclick="selectIcon(this)" >
+                                <img class="icon-img" src="{% static 'djangoflix/images/icons/' %}{{ img }}" height="60" width="50" id="icon{{ forloop.counter }}-img">
+                            </button>
                             {% else %}
-                            <input type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}">
+                            <input class="d-none" type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}">
+                            <button class="btn btn-outline-light rounded-circle icon-btn" type="button" id="icon{{ forloop.counter }}-btn" onclick="selectIcon(this)" >
+                                <img class="icon-img" src="{% static 'djangoflix/images/icons/' %}{{ img }}" height="60" width="50" id="icon{{ forloop.counter }}-img">
+                            </button>
                             {% endif %}
-                            <img src="{% static 'djangoflix/images/' %}{{ img }}" height="60" id="icon{{ forloop.counter }}-img">
                         </div>
                     {% endfor %}
                     </div>

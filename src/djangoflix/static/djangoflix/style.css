@@ -40,3 +40,11 @@
 .clickable:hover {
     cursor: pointer ;
 }
+
+.icon-img {
+    margin: 0;
+}
+
+.icon-btn {
+    padding: 7px 12px;
+}

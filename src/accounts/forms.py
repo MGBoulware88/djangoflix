@@ -106,7 +106,10 @@ class ProfileForm(forms.ModelForm):
     # but must be unique per Account
     def clean(self):
         cleaned_data = super().clean()
-        profile_name = cleaned_data["profile_name"]
+        try:
+            profile_name = cleaned_data["profile_name"]
+        except KeyError:
+            return
         this_account_id: int = cleaned_data["account"].id
         this_account = Account.get_one_account_by_id(this_account_id)
         # The __iexact filter may not function properly in SQLite

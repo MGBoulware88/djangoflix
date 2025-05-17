@@ -6,8 +6,20 @@ from datetime import date, datetime
 
 ICON_CHOICES = {
     "default.png": "default.png",
-    "boy_brown.png": "boy_brown.png",
+    "boy_blue.png": "boy_blue.png",
     "girl_blue.png": "girl_blue.png",
+    "boy_brown.png": "boy_brown.png",
+    "girl_brown.png": "girl_brown.png",
+    "boy_red.png": "boy_red.png",
+    "girl_red.png": "girl_red.png",
+    "girl_blond.png": "girl_blond.png",
+    "girl_green.png": "girl_green.png",
+    "girl_pink.png": "girl_pink.png",
+    "clown.png": "clown.png",
+    "king.png": "king.png",
+    "princess.png": "princess.png",
+    "mermaidA.png": "mermaidA.png",
+    "mermaidB.png": "mermaidB.png",
 }
 
 
