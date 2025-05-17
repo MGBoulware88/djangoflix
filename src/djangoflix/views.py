@@ -22,7 +22,8 @@ def landing(request):
 ### Display Profiles after User logins to Account
 def profiles(request):
     if request.method == "POST":
-        form = ProfileForm(request.POST)
+        form = ProfileForm(request.POST, account=request.session["account"])
+        
         if not form.is_valid():
             id: int = request.session["account"]
             existing_profiles = Account.get_all_profiles_for_account_by_account_id(id)
@@ -42,9 +43,9 @@ def profiles(request):
     except KeyError:
         return redirect(reverse_lazy("accounts:login"))
     existing_profiles = Account.get_all_profiles_for_account_by_account_id(id)
-    add_profile = ProfileForm(initial={"account": id, "icon": "default.png"})
+    add_profile_form = ProfileForm(initial={"account": request.session["account"], "icon": "default.png"})
     context = {
-        "form": add_profile,
+        "form": add_profile_form,
         "profiles": existing_profiles,
     }
     

@@ -102,22 +102,38 @@ class ProfileForm(forms.ModelForm):
             "form": forms.RadioSelect(choices=ICON_CHOICES),
         }
 
+
+    # Adding session's account ID to __init__ so that I can ignore
+    # Account field value that may have been tampered with
+    # It is still convenient to have it exist in the form
+    def __init__(self, *args, **kwargs):
+        self.account_id = kwargs.pop("account", None)
+        super().__init__(*args, **kwargs)
+    
+
     # Profile names are not unique in the database schema,
     # but must be unique per Account
     def clean(self):
         cleaned_data = super().clean()
+        if not "account" in cleaned_data:
+            raise ValidationError("I can't process this. Logout and try again.")
         try:
             profile_name = cleaned_data["profile_name"]
         except KeyError:
             return
-        this_account_id: int = cleaned_data["account"].id
-        this_account = Account.get_one_account_by_id(this_account_id)
+        # Ensure correct val for Account using session
+        this_account = Account.get_one_account_by_id(self.account_id)
+        cleaned_data["account"] = this_account
+        
         # The __iexact filter may not function properly in SQLite
         # if the profile_name includes chars 'outside the ASCII range'
         used_name = this_account.profiles.filter(
             profile_name__iexact=profile_name
         ).first()
         if used_name:
-            raise ValidationError("That profile name is already in use.", code="used_name")
+            raise ValidationError(
+                "That profile name is already in use.",
+                code="used_name",
+            )
 
 # TODO: Add password/username recovery forms

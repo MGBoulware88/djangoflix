@@ -68,6 +68,20 @@
                     <div class="d-flex flex-wrap justify-content-start gap-2 mb-2">
                     {% for value, img in form.icon.field.choices %}
                         <div class="d-flex justify-content-center align-content-center gap-1">
+                        <!-- If form has errors, maintains user icon selection -->
+                        {% if form.is_bound %}
+                            {% if form.cleaned_data.icon == img %}
+                            <input class="d-none" type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}" checked>
+                            <button class="btn btn-outline-primary rounded-circle icon-btn" type="button" id="icon{{ forloop.counter }}-btn" onclick="selectIcon(this)" >
+                                <img class="icon-img" src="{% static 'djangoflix/images/icons/' %}{{ img }}" height="60" width="50" id="icon{{ forloop.counter }}-img">
+                            </button>
+                            {% else %}
+                            <input class="d-none" type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}">
+                            <button class="btn btn-outline-light rounded-circle icon-btn" type="button" id="icon{{ forloop.counter }}-btn" onclick="selectIcon(this)" >
+                                <img class="icon-img" src="{% static 'djangoflix/images/icons/' %}{{ img }}" height="60" width="50" id="icon{{ forloop.counter }}-img">
+                            </button>
+                            {% endif %}
+                        {% else %}
                             {% if forloop.first %}
                             <input class="d-none" type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}" checked>
                             <button class="btn btn-outline-primary rounded-circle icon-btn" type="button" id="icon{{ forloop.counter }}-btn" onclick="selectIcon(this)" >
@@ -79,6 +93,7 @@
                                 <img class="icon-img" src="{% static 'djangoflix/images/icons/' %}{{ img }}" height="60" width="50" id="icon{{ forloop.counter }}-img">
                             </button>
                             {% endif %}
+                        {% endif %}
                         </div>
                     {% endfor %}
                     </div>
@@ -135,6 +150,20 @@
                     <div class="d-flex flex-wrap justify-content-start gap-2 mb-2">
                     {% for value, img in form.icon.field.choices %}
                         <div class="d-flex justify-content-center align-content-center gap-1">
+                        <!-- If form has errors, maintains user icon selection -->
+                        {% if form.is_bound %}
+                            {% if form.cleaned_data.icon == img %}
+                            <input class="d-none" type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}" checked>
+                            <button class="btn btn-outline-primary rounded-circle icon-btn" type="button" id="icon{{ forloop.counter }}-btn" onclick="selectIcon(this)" >
+                                <img class="icon-img" src="{% static 'djangoflix/images/icons/' %}{{ img }}" height="60" width="50" id="icon{{ forloop.counter }}-img">
+                            </button>
+                            {% else %}
+                            <input class="d-none" type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}">
+                            <button class="btn btn-outline-light rounded-circle icon-btn" type="button" id="icon{{ forloop.counter }}-btn" onclick="selectIcon(this)" >
+                                <img class="icon-img" src="{% static 'djangoflix/images/icons/' %}{{ img }}" height="60" width="50" id="icon{{ forloop.counter }}-img">
+                            </button>
+                            {% endif %}
+                        {% else %}
                             {% if forloop.first %}
                             <input class="d-none" type="radio" name="{{ form.icon.name }}" value="{{ value }}" id="icon{{ forloop.counter }}" checked>
                             <button class="btn btn-outline-primary rounded-circle icon-btn" type="button" id="icon{{ forloop.counter }}-btn" onclick="selectIcon(this)" >
@@ -146,6 +175,7 @@
                                 <img class="icon-img" src="{% static 'djangoflix/images/icons/' %}{{ img }}" height="60" width="50" id="icon{{ forloop.counter }}-img">
                             </button>
                             {% endif %}
+                        {% endif %}
                         </div>
                     {% endfor %}
                     </div>
