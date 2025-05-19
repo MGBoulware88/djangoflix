@@ -26,7 +26,7 @@ def profiles(request):
         
         if not form.is_valid():
             id: int = request.session["account"]
-            existing_profiles = Account.get_all_profiles_for_account_by_account_id(id)
+            existing_profiles = Account.get_all_profiles_for_account_by_id(id)
             context = {
                 "form": form,
                 "profiles": existing_profiles,
@@ -42,8 +42,13 @@ def profiles(request):
         id: int = request.session["account"]
     except KeyError:
         return redirect(reverse_lazy("accounts:login"))
-    existing_profiles = Account.get_all_profiles_for_account_by_account_id(id)
-    add_profile_form = ProfileForm(initial={"account": request.session["account"], "icon": "default.png"})
+    existing_profiles = Account.get_all_profiles_for_account_by_id(id)
+    add_profile_form = ProfileForm(
+        initial={
+            "account": request.session["account"],
+            "icon": "default.png",
+        }
+    )
     context = {
         "form": add_profile_form,
         "profiles": existing_profiles,

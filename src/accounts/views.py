@@ -29,7 +29,7 @@ def register(request):
     new_user = User.objects.create_user(
         username=reg_form.cleaned_data["username"],
         email=reg_form.cleaned_data["email"],
-        password=reg_form.cleaned_data["password"],
+        password=reg_form.cleaned_data["password"]
     )
     # Note: login adds user to session via request.user
     login(request, new_user)
@@ -66,7 +66,7 @@ def login_user(request):
     authenticated_user = authenticate(
         request,
         username=login_form.cleaned_data["username"],
-        password=login_form.cleaned_data["password"],
+        password=login_form.cleaned_data["password"]
     )
     login(request, authenticated_user)
 

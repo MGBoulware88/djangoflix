@@ -58,8 +58,8 @@ function toggleProfileForm(focus) {
 }
 
 
-function submitForm() {
-    const profileForm = document.getElementById("addProfileForm");
+function submitForm(formId) {
+    const profileForm = document.getElementById(formId);
     profileForm.submit();
 }
 

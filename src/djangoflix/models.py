@@ -79,7 +79,7 @@ class Account(SharedData):
     
 
     @classmethod
-    def get_all_profiles_for_account_by_account_id(cls, account_id: int):
+    def get_all_profiles_for_account_by_id(cls, account_id: int):
         valid_account = cls.get_one_account_by_id(account_id)
         
         if not valid_account:
