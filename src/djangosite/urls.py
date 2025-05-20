@@ -23,4 +23,5 @@ urlpatterns = [
     path("djangoflix/", include("djangoflix.urls")),
     path('admin/', admin.site.urls),
     path("accounts/", include("accounts.urls")),
+    path("tmdb/", include("tmdb.urls")),
 ]

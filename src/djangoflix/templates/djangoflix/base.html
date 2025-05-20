@@ -50,8 +50,7 @@
             <div class="float-end d-flex justify-content-between gap-1 align-content-center">
                 <p class="mt-2"><a href="{% url 'accounts:login' %}">Login</a></p>
                 <p class="mt-2">or</p>
-                <p class="mt-2"><a href="{% url 'accounts:register' %}">Sign Up</a></p>
-
+                <p class="mt-2 mb-0"><a href="{% url 'accounts:register' %}">Sign Up</a></p>
             </div>
             {% endif %}
         </container>
@@ -59,10 +58,14 @@
     {% if request.session.profile %}
     <div data-bs-theme="dark" class="position-relative d-none" id="navDropdown">
        <div class="bg-body-secondary dynamic-border position-absolute top-0 end-0">
-            <ul class="p-2">
+            <ul class="p-2 pb-0">
                 <li class="dropdown-item"><a href="{% url 'djangoflix:profiles' %}">Switch Profile</a></li>
                 <li class="dropdown-item"><a href="{% url 'accounts:logout' %}">Logout</a></li>
             </ul>
+            {% if request.user.username == "gray" %}
+            <hr>
+            <p class="mx-2 ms-2"><a href="{% url 'tmdb:home' %}">TMDB</a></p>
+            {% endif %}
        </div>
     </div>
     {% endif %}

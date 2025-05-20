@@ -1,5 +1,17 @@
+import json
 import requests
+import os
 from django.db import models
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+BASE_URL = "https://api.themoviedb.org/3"
+HEADER = {
+    "accept": "application/json",
+    "Authorization": os.getenv("TMDB_AUTH")
+}
 
 
 class ContentData(models.Model):
@@ -13,14 +25,50 @@ class ContentData(models.Model):
     # Storing these as 'raw' JSON for now to limit API usage
     # TODO: Add cast/crew info to content
     # {"cast": list[dict]}
-    cast = models.JSONField()
+    cast = models.JSONField(null=True)
     # {"crew": list[dict]}
-    crew = models.JSONField()
+    crew = models.JSONField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True, auto_now=True)
 
+    base_url = "https://api.themoviedb.org/3"
+    header = {
+        "accept": "application/json",
+        "Authorization": os.environ.get("TMDB_AUTH")
+    }
+
     class Meta:
         abstract = True
+
+
+    @staticmethod
+    def _fetch_data(url_ext: str):
+        try:
+            response = requests.get(
+                BASE_URL + url_ext + "?language=en-US",
+                headers=HEADER
+            )
+            return response
+        except Exception as e:
+            print(f"\nFetch failed with:\n{e}\n")
+            return None
+        
+
+    @staticmethod
+    def _write_to_json(data: dict) -> None:
+        with open(
+            f"src/tmdb/json/Movies/{data["title"]}.json",
+            "w",
+            encoding="utf-8"
+        ) as outfile:
+            jsondata = json.dumps(
+                data, 
+                indent=2,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False
+            )
+            outfile.write(jsondata)
 
 
 class Genre(models.Model):
@@ -29,24 +77,9 @@ class Genre(models.Model):
 
 
     @staticmethod
-    def _process_genre(id: int, name: str, object: object) -> tuple[object, bool] | bool:
-        try:
-            # get_or_create returns (object, created), but I only need the object
-            this_genre, created = Genre.objects.get_or_create(tmdb_id=id, name=name)
-            object.genres.add(this_genre)
-            return (this_genre, created)
-        # This except allows processing to continue 
-        # so we can investigate the issue later
-        # though, this should probably never actually happen
-        except Genre.MultipleObjectsReturned:
-            print(f"\nMultiple objects were found for {id}+{name}.\n")
-            return False
-    
-
-    @staticmethod
     def process_all_genres(genres: list[dict], object: object) -> None:
         """
-        Calls process_genre with object for each genre in the genres list.
+        Calls _process_genre with object for each genre in the genres list.
 
         This method is intended for use in conjunction with other TMDB methods,
         and therefore does not save the instance to avoid redundancy.
@@ -69,6 +102,21 @@ class Genre(models.Model):
         # TODO: Update to handle logging new genre creations when logging is added
         for genre in genres:
             Genre._process_genre(genre["id"], genre["name"], object)
+
+
+    @staticmethod
+    def _process_genre(id: int, name: str, object: object) -> tuple[object, bool] | bool:
+        try:
+            # get_or_create returns (object, created), but I only need the object
+            this_genre, created = Genre.objects.get_or_create(tmdb_id=id, name=name)
+            object.genres.add(this_genre)
+            return (this_genre, created)
+        # This except allows processing to continue 
+        # so we can investigate the issue later
+        # though, this should probably never actually happen
+        except Genre.MultipleObjectsReturned:
+            print(f"\nMultiple objects were found for {id}+{name}.\n")
+            return False
     
 
 class TMDBMovie(ContentData):
@@ -77,7 +125,9 @@ class TMDBMovie(ContentData):
     runtime = models.PositiveIntegerField()
 
 
-    def __init__(self, data: dict):
+    def __init__(self, data: dict, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print(f"\nMovie init data:\n{data}\n")
         # Shared Fields
         self.name = data["title"]
         self.overview = data["overview"]
@@ -89,6 +139,44 @@ class TMDBMovie(ContentData):
         # Unique to cls
         self.release_date = data["release_date"]
         self.runtime = data["runtime"]
+    
+
+    def __str__(self):
+        return f"{self.name}"
+    
+    
+    @classmethod
+    def fetch_one_movie_by_id(cls, id: str):
+        try:
+            response = ContentData._fetch_data("/movie/%s" % id)
+            
+            if response.status_code == 200:
+                responsejson = response.json()
+                # print(f"\nResponse JSON:\n{responsejson}\n")
+                TMDBMovie._process_movie(responsejson)
+                return
+            
+            print(f"\nBad Response:\n{response.status_code}\n")
+        
+        except requests.exceptions.RequestException as e:
+            print(f"\nFetch Movie failed:\n{e}\n")
+        except json.JSONDecodeError:
+            print("It happened again!")
+
+
+
+    @classmethod
+    def _process_movie(cls, movie_data: dict):
+        # 1. Grab Movie from TMDB
+        this_movie = TMDBMovie(movie_data)
+        # save to db to get id
+        this_movie.save()
+        # 2. Process genres
+        Genre.process_all_genres(movie_data["genres"], this_movie)
+        # 3. Save changes 
+        this_movie.save()
+        # 4. (optional) Write to JSON to reduce API usage
+        ContentData._write_to_json(movie_data)
 
 
 
@@ -100,7 +188,8 @@ class TMDBTVSeries(ContentData):
     last_air_date = models.CharField(max_length=10) # "YYYY-MM-DD"
 
 
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         # Shared Fields
         self.name = data["name"]
         self.overview = data["overview"]
@@ -128,7 +217,8 @@ class TMDBTVSeason(ContentData):
     air_date = models.CharField(max_length=10) # "YYYY-MM-DD"
         
 
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         # Shared fields
         self.name = data["name"]
         self.overview = data["overview"]
@@ -154,7 +244,8 @@ class TMDBTVEpisode(ContentData):
     runtime = models.PositiveIntegerField()
 
 
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         # Shared fields
         self.name = data["name"]
         self.overview = data["overview"]
