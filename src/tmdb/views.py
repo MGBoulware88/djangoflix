@@ -24,10 +24,10 @@ def process_form(request):
     match request.POST["type"]:
         case "movie":
             TMDBMovie.fetch_one_movie_by_id(request.POST["id"])
-        case "tv":
+        case "series":
             TMDBTVSeries.fetch_one_series_by_id(request.POST["id"])
         case "season":
-            TMDBTVSeason.fetch_one_season_by_series_id_and_season_number(
+            TMDBTVSeason.fetch_one_season_by_series_id(
                 request.POST["id"],
                 request.POST["season"]
             )
