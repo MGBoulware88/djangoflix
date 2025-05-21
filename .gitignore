@@ -1,5 +1,12 @@
 # Local JSON files
 json/
+# Images downloaded from TMDB
+src/tmdb/static/tmdb/*/*.jpg
+src/tmdb/static/tmdb/*/*.png
+src/tmdb/static/tmdb/*/*.svg
+src/tmdb/static/tmdb/*/*/*.jpg
+src/tmdb/static/tmdb/*/*/*.png
+src/tmdb/static/tmdb/*/*/*.svg
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

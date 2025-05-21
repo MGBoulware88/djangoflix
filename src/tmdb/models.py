@@ -8,6 +8,7 @@ load_dotenv()
 
 
 BASE_URL = "https://api.themoviedb.org/3"
+IMG_BASE_URL = "https://image.tmdb.org/t/p/original"
 HEADER = {
     "accept": "application/json",
     "Authorization": os.getenv("TMDB_AUTH")
@@ -18,10 +19,8 @@ class ContentData(models.Model):
     name = models.CharField(max_length=255)
     overview = models.CharField(null=True, default=None, max_length=9999)
     tmdb_id = models.PositiveBigIntegerField(unique=True)
-    # The string used to fetch image from TMDB
-    img_fetch_path = models.CharField(max_length=50)
-    # The stored img after fetching from TMDB, initially null
-    img_path = models.CharField(null=True, max_length=50)
+    # The string used to both fetch image from TMDB and load static
+    img_path = models.CharField(max_length=50)
     # Storing these as 'raw' JSON for now to limit API usage
     # TODO: Add cast/crew info to content
     # {"cast": list[dict]}
@@ -38,17 +37,27 @@ class ContentData(models.Model):
 
     @staticmethod
     def _fetch_data(url_ext: str) -> requests.Response | None:
-        print(f"Fetching from {BASE_URL}{url_ext}?language=en-US")
         try:
             response = requests.get(
                 BASE_URL + url_ext + "?language=en-US",
                 headers=HEADER
             )
             return response
-        except Exception as e:
-            print(f"\nFetch failed with:\n{e}\n")
+        except requests.exceptions.RequestException as e:
+            print(f"\nFetch Data failed:\n{e}\n")
             return None
         
+
+    @staticmethod
+    def _fetch_image(img_path: str) -> requests.Response | None:
+        print(f"Fetching from {IMG_BASE_URL}{img_path}")
+        try:
+            response = requests.get(IMG_BASE_URL + img_path, headers=HEADER)
+            return response
+        except requests.exceptions.RequestException as e:
+            print(f"\nFetch Image failed:\n{e}\n")
+            return None
+
 
     @staticmethod
     def _write_to_json(data: dict, path: str) -> None:
@@ -65,6 +74,12 @@ class ContentData(models.Model):
                 ensure_ascii=False
             )
             outfile.write(jsondata)
+    
+    
+    @staticmethod
+    def _write_image(response: requests.Response, path: str) -> None:
+        with open(path, "wb") as image:
+            image.write(response.content)
 
 
 class Genre(models.Model):
@@ -125,6 +140,34 @@ class TMDBMovie(ContentData):
         return f"{self.name}"
     
     
+    def _fetch_movie_image(self):
+        if not hasattr(self, "img_path"):
+            print(f"\n{self} is missing the img_path attr.\n")
+            return
+        
+        if self.img_path == "/missing.png":
+            print(f"\n{self} doesn't have an image, fetch cancelled.\n")
+            return
+        
+        try:
+            response = ContentData._fetch_image(self.img_path)
+
+            if not response:
+                print("Invalid response object")
+                return
+
+            if response.status_code == 200:
+                path = f"src/tmdb/static/tmdb/movie{self.img_path}"
+                ContentData._write_image(response, path)
+                
+                return
+
+            print(f"\nFetch Image Bad Response:\n{response.status_code}\n")
+
+        except Exception as e:
+            print(f"\nAn exception occurred:\n{e}\n")
+
+
     @classmethod
     def fetch_one_movie_by_id(cls, id: str):
         try:
@@ -142,8 +185,6 @@ class TMDBMovie(ContentData):
             
             print(f"\nBad Response:\n{response.status_code}\n")
         
-        except requests.exceptions.RequestException as e:
-            print(f"\nFetch Movie failed:\n{e}\n")
         except json.JSONDecodeError:
             print("JSON decode failed!")
 
@@ -153,14 +194,15 @@ class TMDBMovie(ContentData):
         this_movie = TMDBMovie.objects.filter(
             tmdb_id=movie_data["id"]
         ).first()
+        # TODO: fetch movie.credits to get cast & crew
         if not this_movie:
             this_movie = TMDBMovie(
-                name=movie_data["title"],
-                overview=movie_data["overview"],
+                name=movie_data["title"] or "missing",
+                overview=movie_data["overview"] or "missing",
                 tmdb_id=movie_data["id"],
-                img_fetch_path=movie_data["poster_path"],
-                release_date=movie_data["release_date"],
-                runtime=movie_data["runtime"],
+                img_fetch_path=movie_data["poster_path"] or "/missing.png",
+                release_date=movie_data["release_date"] or "missing",
+                runtime=movie_data["runtime"] or 999,
                 cast=None,
                 crew=None
             )
@@ -172,7 +214,9 @@ class TMDBMovie(ContentData):
         this_movie.save()
         # 4. (optional) Write to JSON to reduce API usage
         ContentData._write_to_json(movie_data, f"Movies/{this_movie.name}")
-
+        # 5. Fetch image
+        this_movie._fetch_movie_image()
+        
 
 class TMDBTVSeries(ContentData):
     genres = models.ManyToManyField(Genre)
@@ -189,8 +233,36 @@ class TMDBTVSeries(ContentData):
         return "Invalid Series object."
 
 
+    def _fetch_series_image(self):
+        if not hasattr(self, "img_path"):
+            print(f"\n{self} is missing the img_path attr.\n")
+            return
+        
+        if self.img_path == "/missing.png":
+            print(f"\n{self} doesn't have an image, fetch cancelled.\n")
+            return
+        
+        try:
+            response = ContentData._fetch_image(self.img_path)
+
+            if not response:
+                print("Invalid response object")
+                return
+
+            if response.status_code == 200:
+                path = f"src/tmdb/static/tmdb/tv/series{self.img_path}"
+                ContentData._write_image(response, path)
+                
+                return
+
+            print(f"\nFetch Image Bad Response:\n{response.status_code}\n")
+
+        except Exception as e:
+            print(f"\nAn exception occurred:\n{e}\n")
+    
+    
     @classmethod
-    def get_one_series_by_id(cls, id: int):
+    def get_one_series_by_tmdb_id(cls, id: int):
         try:
             this_series = TMDBTVSeries.objects.get(tmdb_id__exact=id)
             return this_series
@@ -200,7 +272,7 @@ class TMDBTVSeries(ContentData):
 
 
     @classmethod
-    def fetch_one_series_by_id(cls, id: str) -> None:
+    def fetch_one_series_by_tmdb_id(cls, id: str) -> None:
         try:
             response = ContentData._fetch_data("/tv/%s" % id)
 
@@ -217,8 +289,6 @@ class TMDBTVSeries(ContentData):
             # Now fetch the season data, which will fetch the episode data
             TMDBTVSeason.fetch_all_seasons_for_series(this_series)
             
-        except requests.exceptions.RequestException as e:
-            print(f"\nFetch Series failed:\n{e}\n")
         except json.JSONDecodeError:
             print("JSON decode failed!")
 
@@ -230,16 +300,16 @@ class TMDBTVSeries(ContentData):
         ).first()
         if not this_series:
             this_series = TMDBTVSeries(
-                name=series_data["name"],
-                overview=series_data["overview"],
+                name=series_data["name"] or "missing",
+                overview=series_data["overview"] or "missing",
                 tmdb_id=series_data["id"],
-                img_fetch_path=series_data["backdrop_path"],
+                img_path=series_data["backdrop_path"] or "/missing.png",
                 cast=None,
                 crew=None,
-                total_seasons=series_data["number_of_seasons"],
-                total_episodes=series_data["number_of_episodes"],
-                first_air_date=series_data["first_air_date"],
-                last_air_date=series_data["last_air_date"]
+                total_seasons=series_data["number_of_seasons"] or 999,
+                total_episodes=series_data["number_of_episodes"] or 999,
+                first_air_date=series_data["first_air_date"] or "missing",
+                last_air_date=series_data["last_air_date"] or "missing",
             )
         # This seasons list has all the data we need to go fetch
         # all of the season details for this series
@@ -254,6 +324,7 @@ class TMDBTVSeries(ContentData):
 
         path = f"TV/{this_series.name}/{this_series.name}"
         ContentData._write_to_json(series_data, path)
+        this_series._fetch_series_image()
 
         return this_series
 
@@ -275,12 +346,40 @@ class TMDBTVSeason(ContentData):
         return "Invalid Season."
 
     
+    def _fetch_season_image(self):
+        if not hasattr(self, "img_path"):
+            print(f"\n{self} is missing the img_path attr.\n")
+            return
+        
+        if self.img_path == "/missing.png":
+            print(f"\n{self} doesn't have an image, fetch cancelled.\n")
+            return
+        
+        try:
+            response = ContentData._fetch_image(self.img_path)
+
+            if not response:
+                print("Invalid response object")
+                return
+
+            if response.status_code == 200:
+                path = f"src/tmdb/static/tmdb/tv/season{self.img_path}"
+                ContentData._write_image(response, path)
+                
+                return
+
+            print(f"\nFetch Image Bad Response:\n{response.status_code}\n")
+
+        except Exception as e:
+            print(f"\nAn exception occurred:\n{e}\n")
+    
+    
     @classmethod
     def fetch_all_seasons_for_series(cls, series: TMDBTVSeries):
         if not hasattr(series, "season_data"):
             print(f"\nThis series is missing season data:\n{series}\n")
             return
-        print(f"\nSeason Data:\n{series.season_data}\n")
+        # print(f"\nSeason Data:\n{series.season_data}\n")
         for season in series.season_data:
             try:
                 cls._fetch_one_season_for_series_with_season_number(
@@ -294,7 +393,7 @@ class TMDBTVSeason(ContentData):
     @classmethod
     def fetch_one_season_by_series_id(cls, series_id: str, season_number: str):
         # Just get the series and call existing methods
-        series = TMDBTVSeries.get_one_series_by_id(int(series_id))
+        series = TMDBTVSeries.get_one_series_by_tmdb_id(int(series_id))
         if not series:
             print("Can't fetch season with not found series")
             return
@@ -329,8 +428,6 @@ class TMDBTVSeason(ContentData):
             # Now grab all the episode data for this season
             TMDBTVEpisode.fetch_all_episodes_for_season(this_season)
             
-        except requests.exceptions.RequestException as e:
-            print(f"\nFetch Season failed:\n{e}\n")
         except json.JSONDecodeError:
             print("JSON decode failed!")
 
@@ -343,19 +440,19 @@ class TMDBTVSeason(ContentData):
 
         if not this_season:
             this_season = TMDBTVSeason(
-                name=season_data["name"],
-                overview=season_data["overview"],
+                name=season_data["name"] or "missing",
+                overview=season_data["overview"] or "missing",
                 tmdb_id=season_data["id"],
-                img_fetch_path=season_data["poster_path"],
+                img_path=season_data["poster_path"] or "/missing.png",
                 cast=None,
                 crew=None,
-                season_number=season_data["season_number"],
-                air_date=season_data["air_date"]
+                season_number=season_data["season_number"] or 999,
+                air_date=season_data["air_date"] or "missing"
             )
         # This episodes list has all the data we need to go fetch
         # all of the episode details for this season
         this_season.episode_data = season_data["episodes"]
-        print(f"\nEpisode Data:\n{this_season.episodes}\n")
+        # print(f"\nEpisode Data:\n{this_season.episode_data}\n")
         this_season.save()
         # Seasons don't have genre data, but series requires ID
         this_season.series = series
@@ -363,6 +460,7 @@ class TMDBTVSeason(ContentData):
         
         path = f"TV/{series.name}/{this_season.name}"
         ContentData._write_to_json(season_data, path)
+        this_season._fetch_season_image()
        
         return this_season
 
@@ -385,6 +483,34 @@ class TMDBTVEpisode(ContentData):
         return "Invalid Episode object."
     
 
+    def _fetch_episode_image(self):
+        if not hasattr(self, "img_path"):
+            print(f"\n{self} is missing the img_path attr.\n")
+            return
+        
+        if self.img_path == "/missing.png":
+            print(f"\n{self} doesn't have an image, fetch cancelled.\n")
+            return
+        
+        try:
+            response = ContentData._fetch_image(self.img_path)
+
+            if not response:
+                print("Invalid response object")
+                return
+
+            if response.status_code == 200:
+                path = f"src/tmdb/static/tmdb/tv/episode{self.img_path}"
+                ContentData._write_image(response, path)
+                
+                return
+
+            print(f"\nFetch Image Bad Response:\n{response.status_code}\n")
+
+        except Exception as e:
+            print(f"\nAn exception occurred:\n{e}\n")
+    
+    
     @classmethod
     def fetch_all_episodes_for_season(cls, season: TMDBTVSeason):
         if not hasattr(season, "episode_data"):
@@ -428,8 +554,6 @@ class TMDBTVEpisode(ContentData):
             # End of the line, nothing to store and pass
             TMDBTVEpisode._process_episode(responsejson, season)
         
-        except requests.exceptions.RequestException as e:
-            print(f"\nFetch Episode failed:\n{e}\n")
         except json.JSONDecodeError:
             print("JSON decode failed!")
 
@@ -441,33 +565,17 @@ class TMDBTVEpisode(ContentData):
         ).first()
         if not this_episode:
             this_episode = TMDBTVEpisode(
-                name=episode_data["name"],
-                overview=episode_data["overview"],
+                name=episode_data["name"] or "missing",
+                overview=episode_data["overview"] or "missing",
                 tmdb_id=episode_data["id"],
-                img_fetch_path=\
-                    episode_data["still_path"]\
-                    if not episode_data["still_path"] == None\
-                    else "",
-                cast={"cast": episode_data["guest_stars"]},
-                crew={"crew": episode_data["crew"]},
-                episode_number=episode_data["episode_number"],
-                air_date=\
-                    episode_data["air_date"]\
-                    if not episode_data["air_date"] == None\
-                    else "unavailable",
-                runtime=\
-                    episode_data["runtime"]\
-                    if not episode_data["runtime"] == None\
-                    else 0
+                img_path=episode_data["still_path"] or "/missing.png",
+                cast={"cast": episode_data["guest_stars"]} or {"cast": None},
+                crew={"crew": episode_data["crew"]} or {"crew": None},
+                episode_number=episode_data["episode_number"] or 999,
+                air_date=episode_data["air_date"] or "missing",
+                runtime=episode_data["runtime"] or 0
             )
         this_episode.season = season
-        this_episode.save()
-        
-        try:
-            Genre.process_all_genres(episode_data["genres"], this_episode)
-        except KeyError:
-            print(f"Episode \"{this_episode.name}\" missing Genres data.\n")
-        
         this_episode.save()
 
         path = "TV/{0}/{1}-Episode{2}".format(
@@ -476,3 +584,4 @@ class TMDBTVEpisode(ContentData):
                 this_episode.episode_number
             )
         ContentData._write_to_json(episode_data, path)
+        this_episode._fetch_episode_image()

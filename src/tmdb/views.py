@@ -25,7 +25,7 @@ def process_form(request):
         case "movie":
             TMDBMovie.fetch_one_movie_by_id(request.POST["id"])
         case "series":
-            TMDBTVSeries.fetch_one_series_by_id(request.POST["id"])
+            TMDBTVSeries.fetch_one_series_by_tmdb_id(request.POST["id"])
         case "season":
             TMDBTVSeason.fetch_one_season_by_series_id(
                 request.POST["id"],
