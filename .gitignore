@@ -1,5 +1,6 @@
 # Local JSON files
 json/
+*.json
 # Images downloaded from TMDB
 src/tmdb/static/tmdb/*/*.jpg
 src/tmdb/static/tmdb/*/*.png
