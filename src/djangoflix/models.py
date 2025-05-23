@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.db import models
+from django import db
 from django.utils import timezone
 from datetime import date, datetime
 
@@ -23,36 +23,82 @@ ICON_CHOICES = {
 }
 
 
-class SharedData(models.Model):
-    created_at: datetime = models.DateTimeField(auto_now_add=True)
-    updated_at: datetime = models.DateTimeField(null=True, auto_now=True)
+class SharedData(db.models.Model):
+    created_at = db.models.DateTimeField(auto_now_add=True)
+    updated_at = db.models.DateTimeField(null=True, auto_now=True)
 
     class Meta:
         abstract = True
 
 
-class WatchableContent(SharedData):
-    title: str = models.CharField(max_length=100)
-    content_type: str = models.CharField(max_length=15)
-    genre: str = models.CharField(max_length=100)
-    description: str = models.TextField()
-    release_date: date = models.DateField()
-    duration: int = models.PositiveIntegerField() # Movies stored in minutes, TV stored in seasons
+class ContentData(SharedData):
+    name = db.models.CharField(max_length=255)
+    overview = db.models.CharField(null=True, default=None, max_length=9999)
+    img_path = db.models.CharField(max_length=50)
+    # TODO: Add cast/crew info to content
+    # {"cast": list[dict]}
+    cast = db.models.JSONField(null=True)
+    # {"crew": list[dict]}
+    crew = db.models.JSONField(null=True)
+
+    class Meta:
+        abstract = True
+
+
+### Movies and TV Series
+class WatchableContent(ContentData):
+    content_type = db.models.CharField(max_length=15)
+    genres = db.models.ManyToManyField("tmdb.Genre")
+    release_date = db.models.DateField()
+    duration = db.models.PositiveIntegerField() # Movies stored in minutes, TV stored in seasons
 
 
     def __str__(self) -> str:
         return self.title
 
 
+### TV Seasons
+class TVSeason(ContentData):
+    series = db.models.ForeignKey(
+        WatchableContent,
+        on_delete=db.models.CASCADE,
+        related_name="seasons",
+    )
+    season_number = db.models.PositiveIntegerField()
+    air_date = db.models.CharField(max_length=10) # "YYYY-MM-DD"
+
+
+    ## Make sure WatachableContent is a TV Series before adding
+    def add_series(self, series: WatchableContent) -> bool:
+        if "TV" in series.content_type:
+            self.series = series
+            self.save()
+            return True
+        
+        return False
+
+
+### TV Episodes
+class TVEpisode(ContentData):
+    season = db.models.ForeignKey(
+        TVSeason,
+        on_delete=db.models.CASCADE,
+        related_name="episodes",
+    )
+    episode_number = db.models.PositiveIntegerField()
+    air_date = db.models.CharField(max_length=10) # "YYYY-MM-DD"
+    runtime = db.models.PositiveIntegerField()
+
+
 class Account(SharedData):
     # stored in db as int, but returns User obj when accessed at runtime
-    user: User | None = models.OneToOneField(
-        User, on_delete=models.CASCADE, null=True
+    user: User | None = db.models.OneToOneField(
+        User, on_delete=db.models.CASCADE, null=True
     )
-    activation_date: datetime = models.DateTimeField(
+    activation_date = db.models.DateTimeField(
         null=True, auto_now_add=True
     )
-    active: bool = models.BooleanField(default=True)
+    active: bool = db.models.BooleanField(default=True)
 
 
     def __str__(self) -> str:
@@ -111,18 +157,18 @@ class Account(SharedData):
 
 
 class Profile(SharedData):
-    profile_name: str = models.CharField(max_length=16)
-    icon: str = models.CharField(
+    profile_name = db.models.CharField(max_length=16)
+    icon = db.models.CharField(
         max_length=30,
         default="default.png",
         choices=ICON_CHOICES,
     )
-    account = models.ForeignKey(
+    account = db.models.ForeignKey(
         Account,
-        on_delete=models.CASCADE,
+        on_delete=db.models.CASCADE,
         related_name="profiles",
     )
-    favorites = models.ManyToManyField(WatchableContent)
+    favorites = db.models.ManyToManyField(WatchableContent)
 
     def __str__(self) -> str:
         return self.profile_name

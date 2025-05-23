@@ -8,8 +8,16 @@
         <h2 class="fs-1">TMDB Fetch Form</h2>
         <form action="{% url 'tmdb:process' %}" method="POST">
             {% csrf_token %}
-    
-            {{ form }}
+            {{ fetch_form }}
+            <input type="submit">
+        </form>
+    </container>
+    <hr>
+    <container class="card col-4 bg-body-secondary mx-auto p-2">
+        <h2 class="fs-1">Upload JSON</h2>
+        <form action="{% url 'tmdb:upload' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ file_form }}
             <input type="submit">
         </form>
     </container>

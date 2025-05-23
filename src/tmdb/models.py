@@ -4,6 +4,8 @@ import os
 from django.db import models
 from dotenv import load_dotenv
 
+from djangoflix.models import WatchableContent, TVSeason, TVEpisode
+
 load_dotenv()
 
 
@@ -140,6 +142,51 @@ class TMDBMovie(ContentData):
         return f"{self.name}"
     
     
+    def _to_dict(self) -> dict:
+        movie_dict = {
+            field.name: getattr(self, field.name)\
+            for field in self._meta.fields
+        }
+        movie_dict["duration"] = movie_dict["runtime"]
+        movie_dict["content_type"] = "Movie"
+        
+        del movie_dict["id"]
+        del movie_dict["runtime"]
+        del movie_dict["tmdb_id"]
+        del movie_dict["created_at"]
+        del movie_dict["updated_at"]
+
+        return movie_dict
+    
+    
+    def _add_to_djangoflix(self, data: dict=None):
+        if data == None:
+            data = self._to_dict()
+        
+        # get_or_create isn't working as expected
+        try:
+            new_movie = WatchableContent.objects.get(
+                name__exact=self.name,
+                release_date__exact=self.release_date
+            )
+            return False
+            
+        except WatchableContent.MultipleObjectsReturned:
+            print(f"\nMultiple objects were found for {self.name}.\n")
+            return False
+        
+        except WatchableContent.DoesNotExist:
+            new_movie = WatchableContent.objects.create(**data)
+            new_movie.save()
+            # _to_dict()/data doesn't include M2M fields
+            for genre in self.genres.all():
+                new_movie.genres.add(genre)
+            new_movie.save()
+        
+            return True
+        
+            
+    
     def _fetch_movie_image(self):
         if not hasattr(self, "img_path"):
             print(f"\n{self} is missing the img_path attr.\n")
@@ -169,6 +216,36 @@ class TMDBMovie(ContentData):
 
 
     @classmethod
+    def add_movie_from_json(cls, data: dict) -> bool:
+        """
+        Adds TMDBMovie if not exist and adds WatchableContent if not exist.
+
+        Parameters
+        ----------
+        data : dict
+            field data for adding the content
+
+        Returns
+        -------
+        bool
+        """
+
+        if not type(data) == dict:
+            return False
+        
+        existing_movie = cls.objects.filter(pk=data["id"]).first()
+        if existing_movie:
+            existing_movie._add_to_djangoflix()
+            return True
+        
+        new_movie = TMDBMovie._process_movie(data)
+        added = new_movie._add_to_djangoflix()
+
+        return added
+
+    
+    
+    @classmethod
     def fetch_one_movie_by_id(cls, id: str):
         try:
             response = ContentData._fetch_data("/movie/%s" % id)
@@ -180,7 +257,9 @@ class TMDBMovie(ContentData):
             if response.status_code == 200:
                 responsejson = response.json()
                 # print(f"\nResponse JSON:\n{responsejson}\n")
-                TMDBMovie._process_movie(responsejson)
+                this_movie = TMDBMovie._process_movie(responsejson)
+                # (optional) Write to JSON to reduce API usage
+                ContentData._write_to_json(responsejson, f"Movies/{this_movie.name}")
                 return
             
             print(f"\nBad Response:\n{response.status_code}\n")
@@ -200,7 +279,7 @@ class TMDBMovie(ContentData):
                 name=movie_data["title"] or "missing",
                 overview=movie_data["overview"] or "missing",
                 tmdb_id=movie_data["id"],
-                img_fetch_path=movie_data["poster_path"] or "/missing.png",
+                img_path=movie_data["poster_path"] or "/missing.png",
                 release_date=movie_data["release_date"] or "missing",
                 runtime=movie_data["runtime"] or 999,
                 cast=None,
@@ -212,10 +291,10 @@ class TMDBMovie(ContentData):
         Genre.process_all_genres(movie_data["genres"], this_movie)
         # 3. Save changes 
         this_movie.save()
-        # 4. (optional) Write to JSON to reduce API usage
-        ContentData._write_to_json(movie_data, f"Movies/{this_movie.name}")
-        # 5. Fetch image
+        # 4. Fetch image
         this_movie._fetch_movie_image()
+
+        return this_movie
         
 
 class TMDBTVSeries(ContentData):

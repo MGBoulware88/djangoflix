@@ -7,4 +7,5 @@ app_name="tmdb"
 urlpatterns = [
     path("", views.home, name="home"),
     path("tmdb/process/", views.process_form, name="process"),
+    path("tmdb/upload/", views.process_upload, name="upload"),
 ]

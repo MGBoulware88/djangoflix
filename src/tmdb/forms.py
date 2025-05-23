@@ -15,3 +15,8 @@ class FetchForm(forms.Form):
         required=False,
         help_text="Only enter a value if type is \"TV Season\""
     )
+
+
+class UploadForm(forms.Form):
+    type = forms.ChoiceField(choices=TYPE)
+    file = forms.FileField()
