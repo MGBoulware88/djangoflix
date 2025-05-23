@@ -40,6 +40,7 @@ class ContentData(SharedData):
     cast = db.models.JSONField(null=True)
     # {"crew": list[dict]}
     crew = db.models.JSONField(null=True)
+    tmdb_id = db.models.PositiveBigIntegerField(null=True)
 
     class Meta:
         abstract = True
@@ -55,6 +56,19 @@ class WatchableContent(ContentData):
 
     def __str__(self) -> str:
         return self.title
+    
+
+    @classmethod
+    def get_one_series_for_season(cls, tmdb_id):
+        try:
+            series = cls.objects.get(tmdb_id=tmdb_id, content_type="TV")
+            return series
+        except cls.DoesNotExist:
+            print(f"\nFailed to locate Series {tmdb_id}\n")
+            return None
+        except cls.MultipleObjectsReturned:
+            print(f"Multiple results for Series {tmdb_id}\n")
+            return None
 
 
 ### TV Seasons
@@ -63,19 +77,33 @@ class TVSeason(ContentData):
         WatchableContent,
         on_delete=db.models.CASCADE,
         related_name="seasons",
+        null=True
     )
     season_number = db.models.PositiveIntegerField()
     air_date = db.models.CharField(max_length=10) # "YYYY-MM-DD"
 
 
     ## Make sure WatachableContent is a TV Series before adding
-    def add_series(self, series: WatchableContent) -> bool:
-        if "TV" in series.content_type:
+    def add_series(self, tmdb_id) -> None:
+        try:
+            series = WatchableContent.get_one_series_for_season(tmdb_id)
             self.series = series
-            self.save()
-            return True
-        
-        return False
+
+        except AttributeError:
+            print(f"Series {series} missing required attributes\n")
+    
+
+    @classmethod
+    def get_one_season_for_episode(cls, tmdb_id):
+        try:
+            season = cls.objects.get(tmdb_id=tmdb_id )
+            return season
+        except cls.DoesNotExist:
+            print(f"\nFailed to locate Season {season.name} for {season.series}\n")
+            return None
+        except cls.MultipleObjectsReturned:
+            print(f"Multiple results for Season {season.name} for {season.series}\n")
+            return None
 
 
 ### TV Episodes
@@ -84,10 +112,19 @@ class TVEpisode(ContentData):
         TVSeason,
         on_delete=db.models.CASCADE,
         related_name="episodes",
+        null=True
     )
     episode_number = db.models.PositiveIntegerField()
     air_date = db.models.CharField(max_length=10) # "YYYY-MM-DD"
     runtime = db.models.PositiveIntegerField()
+
+
+    def add_season(self, tmbd_id) -> None:
+        try:
+            season = TVSeason.get_one_season_for_episode(tmbd_id)
+            self.season = season
+        except AttributeError:
+            print(f"\nSeason {season} missing required attributes\n")
 
 
 class Account(SharedData):

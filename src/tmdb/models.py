@@ -36,6 +36,45 @@ class ContentData(models.Model):
     class Meta:
         abstract = True
 
+    
+    def _to_dict(self) -> dict:
+        content_dict = {
+            field.name: getattr(self, field.name)\
+            for field in self._meta.fields
+        }
+        
+        del content_dict["id"]
+        del content_dict["created_at"]
+        del content_dict["updated_at"]
+
+        return content_dict
+    
+    
+    def _add_to_djangoflix(self, data: dict=None):
+        if data == None:
+            data = self._to_dict()
+        
+        # get_or_create isn't working as expected
+        try:
+            new_content = WatchableContent.objects.get(
+                tmdb_id=data["tmdb_id"]
+            )
+            return False
+            
+        except WatchableContent.MultipleObjectsReturned:
+            print(f"\nMultiple objects were found for {self.name}.\n")
+            return False
+        
+        except WatchableContent.DoesNotExist:
+            new_content = WatchableContent.objects.create(**data)
+            new_content.save()
+            # _to_dict()/data doesn't include M2M fields
+            if "genres" in data:
+                Genre.process_all_genres(data["genres"], new_content)
+                new_content.save()
+        
+            return True
+
 
     @staticmethod
     def _fetch_data(url_ext: str) -> requests.Response | None:
@@ -60,7 +99,7 @@ class ContentData(models.Model):
             print(f"\nFetch Image failed:\n{e}\n")
             return None
 
-
+    
     @staticmethod
     def _write_to_json(data: dict, path: str) -> None:
         with open(
@@ -143,48 +182,13 @@ class TMDBMovie(ContentData):
     
     
     def _to_dict(self) -> dict:
-        movie_dict = {
-            field.name: getattr(self, field.name)\
-            for field in self._meta.fields
-        }
-        movie_dict["duration"] = movie_dict["runtime"]
+        movie_dict = super()._to_dict()
         movie_dict["content_type"] = "Movie"
-        
-        del movie_dict["id"]
+        movie_dict["duration"] = self.runtime
+
         del movie_dict["runtime"]
-        del movie_dict["tmdb_id"]
-        del movie_dict["created_at"]
-        del movie_dict["updated_at"]
 
         return movie_dict
-    
-    
-    def _add_to_djangoflix(self, data: dict=None):
-        if data == None:
-            data = self._to_dict()
-        
-        # get_or_create isn't working as expected
-        try:
-            new_movie = WatchableContent.objects.get(
-                name__exact=self.name,
-                release_date__exact=self.release_date
-            )
-            return False
-            
-        except WatchableContent.MultipleObjectsReturned:
-            print(f"\nMultiple objects were found for {self.name}.\n")
-            return False
-        
-        except WatchableContent.DoesNotExist:
-            new_movie = WatchableContent.objects.create(**data)
-            new_movie.save()
-            # _to_dict()/data doesn't include M2M fields
-            for genre in self.genres.all():
-                new_movie.genres.add(genre)
-            new_movie.save()
-        
-            return True
-        
             
     
     def _fetch_movie_image(self):
@@ -233,17 +237,16 @@ class TMDBMovie(ContentData):
         if not type(data) == dict:
             return False
         
-        existing_movie = cls.objects.filter(pk=data["id"]).first()
-        if existing_movie:
-            existing_movie._add_to_djangoflix()
-            return True
-        
         new_movie = TMDBMovie._process_movie(data)
+        # img should already be downloaded
+        path = f"src/tmdb/static/tmdb/movie{new_movie.img_path}"
+        if not os.path.isfile(path):
+            new_movie._fetch_movie_image()
+        
         added = new_movie._add_to_djangoflix()
 
         return added
 
-    
     
     @classmethod
     def fetch_one_movie_by_id(cls, id: str):
@@ -256,8 +259,9 @@ class TMDBMovie(ContentData):
             
             if response.status_code == 200:
                 responsejson = response.json()
-                # print(f"\nResponse JSON:\n{responsejson}\n")
                 this_movie = TMDBMovie._process_movie(responsejson)
+                this_movie._fetch_movie_image()
+                this_movie._add_to_djangoflix()
                 # (optional) Write to JSON to reduce API usage
                 ContentData._write_to_json(responsejson, f"Movies/{this_movie.name}")
                 return
@@ -291,8 +295,6 @@ class TMDBMovie(ContentData):
         Genre.process_all_genres(movie_data["genres"], this_movie)
         # 3. Save changes 
         this_movie.save()
-        # 4. Fetch image
-        this_movie._fetch_movie_image()
 
         return this_movie
         
@@ -312,6 +314,20 @@ class TMDBTVSeries(ContentData):
         return "Invalid Series object."
 
 
+    def _to_dict(self) -> dict:
+        series_dict = super()._to_dict()
+        series_dict["content_type"] = "TV"
+        series_dict["duration"] = self.total_seasons
+        series_dict["release_date"] = self.first_air_date
+
+        del series_dict["total_seasons"]
+        del series_dict["total_episodes"]
+        del series_dict["first_air_date"]
+        del series_dict["last_air_date"]
+
+        return series_dict
+    
+    
     def _fetch_series_image(self):
         if not hasattr(self, "img_path"):
             print(f"\n{self} is missing the img_path attr.\n")
@@ -341,6 +357,36 @@ class TMDBTVSeries(ContentData):
     
     
     @classmethod
+    def add_series_from_json(cls, data: dict) -> bool:
+        """
+        Adds TMDBTVSeries if not exist and adds WatchableContent if not exist.
+
+        Parameters
+        ----------
+        data : dict
+            field data for adding the content
+
+        Returns
+        -------
+        bool
+        """
+
+        if not type(data) == dict:
+            return False
+        
+        new_series = TMDBTVSeries._process_series(data)
+        # img should already be downloaded
+        path = f"src/tmdb/static/tmdb/tv/series/{new_series.img_path}"
+        if not os.path.isfile(path):
+            new_series._fetch_series_image()
+        
+        added = new_series._add_to_djangoflix()
+        TMDBTVSeason.add_all_seasons_from_json(new_series)
+
+        return added
+    
+    
+    @classmethod
     def get_one_series_by_tmdb_id(cls, id: int):
         try:
             this_series = TMDBTVSeries.objects.get(tmdb_id__exact=id)
@@ -365,6 +411,11 @@ class TMDBTVSeries(ContentData):
 
             responsejson = response.json()
             this_series = TMDBTVSeries._process_series(responsejson)
+            this_series._fetch_series_image()
+            this_series._add_to_djangoflix()
+            # (optional) Write to JSON to reduce API usage
+            path = f"TV/{this_series.name}/{this_series.name}"
+            ContentData._write_to_json(responsejson, path)
             # Now fetch the season data, which will fetch the episode data
             TMDBTVSeason.fetch_all_seasons_for_series(this_series)
             
@@ -401,10 +452,6 @@ class TMDBTVSeries(ContentData):
         except KeyError:
             print(f"Series \"{series_data["name"]}\" missing Genres data.")
 
-        path = f"TV/{this_series.name}/{this_series.name}"
-        ContentData._write_to_json(series_data, path)
-        this_series._fetch_series_image()
-
         return this_series
 
 
@@ -413,6 +460,7 @@ class TMDBTVSeason(ContentData):
         TMDBTVSeries,
         on_delete=models.CASCADE,
         related_name="seasons",
+        null=True
     )
     season_number = models.PositiveIntegerField()
     air_date = models.CharField(max_length=10) # "YYYY-MM-DD"
@@ -425,6 +473,37 @@ class TMDBTVSeason(ContentData):
         return "Invalid Season."
 
     
+    def _to_dict(self) -> dict:
+        season_dict = super()._to_dict()
+
+        del season_dict["series"]
+
+        return season_dict
+    
+    
+    def _add_to_djangoflix(self, series: TMDBTVSeries, data=None) -> bool:
+        if data == None:
+            data = self._to_dict()
+        
+        try:
+            new_season = TVSeason.objects.get(
+                tmdb_id=data["tmdb_id"]
+            )
+            return False
+        
+        except TVSeason.MultipleObjectsReturned:
+            print(f"\nMultiple objects were found for {self.name}.\n")
+            return False
+        
+        except TVSeason.DoesNotExist:
+            new_season = TVSeason(**data)
+            new_season.save()
+            new_season.add_series(series.tmdb_id)
+            new_season.save()
+
+            return True
+        
+
     def _fetch_season_image(self):
         if not hasattr(self, "img_path"):
             print(f"\n{self} is missing the img_path attr.\n")
@@ -454,11 +533,41 @@ class TMDBTVSeason(ContentData):
     
     
     @classmethod
+    def add_all_seasons_from_json(cls, series: TMDBTVSeries) -> None:
+        for season in series.season_data:
+            cls._add_season_from_json(season, series)
+            
+    
+    @classmethod
+    def _add_season_from_json(cls, data: dict, series: TMDBTVSeries):
+        path = f"TV/{series.name}/{data['name']}"
+        if not os.path.isfile(path):
+            return
+        with open(f"src/tmdb/json/{path}.json", "r", encoding="utf-8") as file:
+            existing_data = json.load(file)
+
+            if not existing_data:
+                return
+            
+            new_season = TMDBTVSeason._process_season(existing_data, series)
+
+        img_path = f"src/tmdb/static/tmdb/tv/season/{new_season.img_path}"
+        if not os.path.isfile(img_path):
+            new_season._fetch_season_image()
+        
+        added = new_season._add_to_djangoflix(series)
+
+        TMDBTVEpisode.add_all_episodes_from_json(new_season)
+
+        return added
+        
+
+    @classmethod
     def fetch_all_seasons_for_series(cls, series: TMDBTVSeries):
         if not hasattr(series, "season_data"):
             print(f"\nThis series is missing season data:\n{series}\n")
             return
-        # print(f"\nSeason Data:\n{series.season_data}\n")
+        
         for season in series.season_data:
             try:
                 cls._fetch_one_season_for_series_with_season_number(
@@ -504,6 +613,11 @@ class TMDBTVSeason(ContentData):
             
             responsejson = response.json()
             this_season = TMDBTVSeason._process_season(responsejson, series)
+            this_season._fetch_season_image()
+            this_season._add_to_djangoflix(series)
+            # (optional) Write to JSON to reduce API usage
+            path = f"TV/{series.name}/{this_season.name}"
+            ContentData._write_to_json(responsejson, path)
             # Now grab all the episode data for this season
             TMDBTVEpisode.fetch_all_episodes_for_season(this_season)
             
@@ -531,15 +645,10 @@ class TMDBTVSeason(ContentData):
         # This episodes list has all the data we need to go fetch
         # all of the episode details for this season
         this_season.episode_data = season_data["episodes"]
-        # print(f"\nEpisode Data:\n{this_season.episode_data}\n")
         this_season.save()
         # Seasons don't have genre data, but series requires ID
         this_season.series = series
         this_season.save()
-        
-        path = f"TV/{series.name}/{this_season.name}"
-        ContentData._write_to_json(season_data, path)
-        this_season._fetch_season_image()
        
         return this_season
 
@@ -549,6 +658,7 @@ class TMDBTVEpisode(ContentData):
         TMDBTVSeason,
         on_delete=models.CASCADE,
         related_name="episodes",
+        null=True
     )
     episode_number = models.PositiveIntegerField()
     air_date = models.CharField(max_length=10) # "YYYY-MM-DD"
@@ -562,6 +672,37 @@ class TMDBTVEpisode(ContentData):
         return "Invalid Episode object."
     
 
+    def _to_dict(self) -> dict:
+        episode_dict = super()._to_dict()
+        
+        del episode_dict["season"]
+
+        return episode_dict
+    
+    
+    def _add_to_djangoflix(self, season: TMDBTVSeason, data=None) -> bool:
+        if data == None:
+            data = self._to_dict()
+        
+        try:
+            new_episode = TVEpisode.objects.get(
+                tmdb_id=data["tmdb_id"]
+            )
+            return False
+        
+        except TVEpisode.MultipleObjectsReturned:
+            print(f"\nMultiple objects were found for {self.name}.\n")
+            return False
+        
+        except TVEpisode.DoesNotExist:
+            new_episode = TVEpisode(**data)
+            new_episode.save()
+            new_episode.add_season(season.tmdb_id)
+            new_episode.save()
+
+            return True
+    
+    
     def _fetch_episode_image(self):
         if not hasattr(self, "img_path"):
             print(f"\n{self} is missing the img_path attr.\n")
@@ -588,6 +729,38 @@ class TMDBTVEpisode(ContentData):
 
         except Exception as e:
             print(f"\nAn exception occurred:\n{e}\n")
+    
+    
+    @classmethod
+    def add_all_episodes_from_json(cls, season: TMDBTVSeason) -> None:
+        for episode in season.episode_data:
+            cls._add_episode_from_json(episode, season)
+    
+    
+    @classmethod
+    def _add_episode_from_json(cls, data: dict, season: TMDBTVSeason) -> None:
+        path = "TV/{0}/{1}-Episode{2}".format(
+            season.series.name,
+            season.name,
+            data["episode_number"]
+        )
+        if not os.path.isfile(path):
+            return
+        with open(f"src/tmdb/json/{path}.json", "r", encoding="utf-8") as file:
+            existing_data = json.load(file)
+
+            if not existing_data:
+                return
+            
+            new_episode = TMDBTVEpisode._process_episode(existing_data, season)
+
+        img_path = f"src/tmdb/static/tmdb/tv/episode/{new_episode.img_path}"
+        if not os.path.isfile(img_path):
+            new_episode._fetch_episode_image()
+
+        added = new_episode._add_to_djangoflix(season)
+
+        return added
     
     
     @classmethod
@@ -630,8 +803,16 @@ class TMDBTVEpisode(ContentData):
                 return
             
             responsejson = response.json()
-            # End of the line, nothing to store and pass
-            TMDBTVEpisode._process_episode(responsejson, season)
+            this_episode = TMDBTVEpisode._process_episode(responsejson, season)
+            this_episode._fetch_episode_image()
+            this_episode._add_to_djangoflix(season)
+            # (optional) Write to JSON to reduce API usage
+            path = "TV/{0}/{1}-Episode{2}".format(
+                season.series.name,
+                season.name,
+                this_episode.episode_number
+            )
+            ContentData._write_to_json(responsejson, path)
         
         except json.JSONDecodeError:
             print("JSON decode failed!")
@@ -657,10 +838,4 @@ class TMDBTVEpisode(ContentData):
         this_episode.season = season
         this_episode.save()
 
-        path = "TV/{0}/{1}-Episode{2}".format(
-                season.series.name,
-                season.name,
-                this_episode.episode_number
-            )
-        ContentData._write_to_json(episode_data, path)
-        this_episode._fetch_episode_image()
+        return this_episode

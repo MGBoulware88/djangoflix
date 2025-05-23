@@ -52,7 +52,7 @@ def process_upload(request):
         case "movie":
             TMDBMovie.add_movie_from_json(file_data)
         case "series":
-            pass
+            TMDBTVSeries.add_series_from_json(file_data)
         case "season":
             pass
         case _:
