@@ -263,7 +263,9 @@ class TMDBMovie(ContentData):
                 this_movie._fetch_movie_image()
                 this_movie._add_to_djangoflix()
                 # (optional) Write to JSON to reduce API usage
-                ContentData._write_to_json(responsejson, f"Movies/{this_movie.name}")
+                
+                normalized_name = this_movie.name.replace(":", " -")
+                ContentData._write_to_json(responsejson, f"Movies/{normalized_name}")
                 return
             
             print(f"\nBad Response:\n{response.status_code}\n")
@@ -414,7 +416,8 @@ class TMDBTVSeries(ContentData):
             this_series._fetch_series_image()
             this_series._add_to_djangoflix()
             # (optional) Write to JSON to reduce API usage
-            path = f"TV/{this_series.name}/{this_series.name}"
+            normalized_name = this_series.name.replace(":", " -")
+            path = f"TV/{normalized_name}/{normalized_name}"
             ContentData._write_to_json(responsejson, path)
             # Now fetch the season data, which will fetch the episode data
             TMDBTVSeason.fetch_all_seasons_for_series(this_series)
@@ -616,7 +619,9 @@ class TMDBTVSeason(ContentData):
             this_season._fetch_season_image()
             this_season._add_to_djangoflix(series)
             # (optional) Write to JSON to reduce API usage
-            path = f"TV/{series.name}/{this_season.name}"
+            n_series_name = series.name.replace(":", " -")
+            n_season_name = this_season.name.replace(":", " -")
+            path = f"TV/{n_series_name}/{n_season_name}"
             ContentData._write_to_json(responsejson, path)
             # Now grab all the episode data for this season
             TMDBTVEpisode.fetch_all_episodes_for_season(this_season)
@@ -807,9 +812,11 @@ class TMDBTVEpisode(ContentData):
             this_episode._fetch_episode_image()
             this_episode._add_to_djangoflix(season)
             # (optional) Write to JSON to reduce API usage
+            n_series_name = season.series.name.replace(":", " -")
+            n_season_name = season.name.replace(":", " -")
             path = "TV/{0}/{1}-Episode{2}".format(
-                season.series.name,
-                season.name,
+                n_series_name,
+                n_season_name,
                 this_episode.episode_number
             )
             ContentData._write_to_json(responsejson, path)
