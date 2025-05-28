@@ -59,6 +59,4 @@ def process_upload(request):
             print(f"\nInvalid type {request.POST["type"]}\n")
             return redirect(reverse_lazy("tmdb:home"))
 
-
-
     return redirect(reverse_lazy("tmdb:home"))

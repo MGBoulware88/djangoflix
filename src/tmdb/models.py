@@ -50,15 +50,17 @@ class ContentData(models.Model):
         return content_dict
     
     
-    def _add_to_djangoflix(self, data: dict=None):
-        if data == None:
-            data = self._to_dict()
+    def _add_to_djangoflix(self, genre_data: dict):
+        
         
         # get_or_create isn't working as expected
         try:
             new_content = WatchableContent.objects.get(
-                tmdb_id=data["tmdb_id"]
+                tmdb_id=self.tmdb_id
             )
+            if genre_data:
+                Genre.process_all_genres(genre_data["genres"], new_content)
+                new_content.save()
             return False
             
         except WatchableContent.MultipleObjectsReturned:
@@ -66,11 +68,12 @@ class ContentData(models.Model):
             return False
         
         except WatchableContent.DoesNotExist:
-            new_content = WatchableContent.objects.create(**data)
+            content_data = self._to_dict()
+            new_content = WatchableContent.objects.create(**content_data)
             new_content.save()
-            # _to_dict()/data doesn't include M2M fields
-            if "genres" in data:
-                Genre.process_all_genres(data["genres"], new_content)
+
+            if genre_data:
+                Genre.process_all_genres(genre_data["genres"], new_content)
                 new_content.save()
         
             return True
@@ -243,7 +246,7 @@ class TMDBMovie(ContentData):
         if not os.path.isfile(path):
             new_movie._fetch_movie_image()
         
-        added = new_movie._add_to_djangoflix()
+        added = new_movie._add_to_djangoflix({"genres": data["genres"]})
 
         return added
 
@@ -260,10 +263,11 @@ class TMDBMovie(ContentData):
             if response.status_code == 200:
                 responsejson = response.json()
                 this_movie = TMDBMovie._process_movie(responsejson)
-                this_movie._fetch_movie_image()
-                this_movie._add_to_djangoflix()
+                this_movie._fetch_movie_image() 
+                this_movie._add_to_djangoflix(
+                    {"genres": responsejson["genres"]}
+                )
                 # (optional) Write to JSON to reduce API usage
-                
                 normalized_name = this_movie.name.replace(":", " -")
                 ContentData._write_to_json(responsejson, f"Movies/{normalized_name}")
                 return
@@ -382,7 +386,9 @@ class TMDBTVSeries(ContentData):
         if not os.path.isfile(path):
             new_series._fetch_series_image()
         
-        added = new_series._add_to_djangoflix()
+        added = new_series._add_to_djangoflix(
+            {"genres": data["genres"]}
+        )
         TMDBTVSeason.add_all_seasons_from_json(new_series)
 
         return added
@@ -414,7 +420,9 @@ class TMDBTVSeries(ContentData):
             responsejson = response.json()
             this_series = TMDBTVSeries._process_series(responsejson)
             this_series._fetch_series_image()
-            this_series._add_to_djangoflix()
+            this_series._add_to_djangoflix(
+                {"genres": responsejson["genres"]}
+            )
             # (optional) Write to JSON to reduce API usage
             normalized_name = this_series.name.replace(":", " -")
             path = f"TV/{normalized_name}/{normalized_name}"
@@ -484,13 +492,10 @@ class TMDBTVSeason(ContentData):
         return season_dict
     
     
-    def _add_to_djangoflix(self, series: TMDBTVSeries, data=None) -> bool:
-        if data == None:
-            data = self._to_dict()
-        
+    def _add_to_djangoflix(self, series: TMDBTVSeries) -> bool:
         try:
             new_season = TVSeason.objects.get(
-                tmdb_id=data["tmdb_id"]
+                tmdb_id=self.tmdb_id
             )
             return False
         
@@ -499,6 +504,7 @@ class TMDBTVSeason(ContentData):
             return False
         
         except TVSeason.DoesNotExist:
+            data = self._to_dict()
             new_season = TVSeason(**data)
             new_season.save()
             new_season.add_series(series.tmdb_id)
@@ -685,13 +691,10 @@ class TMDBTVEpisode(ContentData):
         return episode_dict
     
     
-    def _add_to_djangoflix(self, season: TMDBTVSeason, data=None) -> bool:
-        if data == None:
-            data = self._to_dict()
-        
+    def _add_to_djangoflix(self, season: TMDBTVSeason) -> bool:
         try:
             new_episode = TVEpisode.objects.get(
-                tmdb_id=data["tmdb_id"]
+                tmdb_id=self.tmdb_id
             )
             return False
         
@@ -700,6 +703,7 @@ class TMDBTVEpisode(ContentData):
             return False
         
         except TVEpisode.DoesNotExist:
+            data = self._to_dict()
             new_episode = TVEpisode(**data)
             new_episode.save()
             new_episode.add_season(season.tmdb_id)
