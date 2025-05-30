@@ -15,6 +15,58 @@
         </ul>
     </section>
     {% endif %}
+
+    {% if comedy %}
+    <section class="comedy-container">
+        <h1>Comedy</h1>
+        <ul class="comedy-list d-flex gap-1">
+            {% for content in comedy %}
+            <li class="content-tile">
+                <img src="{% static content.img_path %}" width="145">
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    {% if drama %}
+    <section class="drama-container">
+        <h1>Drama</h1>
+        <ul class="drama-list d-flex gap-1">
+            {% for content in drama %}
+            <li class="content-tile">
+                <img src="{% static content.img_path %}" width="145">
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    {% if scifi %}
+    <section class="scifi-container">
+        <h1>Sci-Fi</h1>
+        <ul class="scifi-list d-flex gap-1">
+            {% for content in scifi %}
+            <li class="content-tile">
+                <img src="{% static content.img_path %}" width="145">
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+    
+    {% if thriller %}
+    <section class="thriller-container">
+        <h1>Thriller</h1>
+        <ul class="thriller-list d-flex gap-1">
+            {% for content in thriller %}
+            <li class="content-tile">
+                <img src="{% static content.img_path %}" width="145">
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
     
     {% if adventure %}
     <section class="adventure-container">
@@ -42,19 +94,6 @@
     </section>
     {% endif %}
 
-    {% if comedy %}
-    <section class="comedy-container">
-        <h1>Comedy</h1>
-        <ul class="comedy-list d-flex gap-1">
-            {% for content in comedy %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
-            </li>
-            {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
-
     {% if crime %}
     <section class="crime-container">
         <h1>Crime</h1>
@@ -67,25 +106,12 @@
         </ul>
     </section>
     {% endif %}
-
-    {% if documentary %}
-    <section class="documentary-container">
-        <h1>Documentary</h1>
-        <ul class="documentary-list d-flex gap-1">
-            {% for content in documentary %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
-            </li>
-            {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
-
-    {% if drama %}
-    <section class="drama-container">
-        <h1>Drama</h1>
-        <ul class="drama-list d-flex gap-1">
-            {% for content in drama %}
+    
+    {% if fantasy %}
+    <section class="fantasy-container">
+        <h1>Fantasy</h1>
+        <ul class="fantasy-list d-flex gap-1">
+            {% for content in fantasy %}
             <li class="content-tile">
                 <img src="{% static content.img_path %}" width="145">
             </li>
@@ -106,25 +132,12 @@
         </ul>
     </section>
     {% endif %}
-
-    {% if fantasy %}
-    <section class="fantasy-container">
-        <h1>Fantasy</h1>
-        <ul class="fantasy-list d-flex gap-1">
-            {% for content in fantasy %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
-            </li>
-            {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
-
-    {% if history %}
-    <section class="history-container">
-        <h1>History</h1>
-        <ul class="history-list d-flex gap-1">
-            {% for content in history %}
+    
+    {% if kids %}
+    <section class="kids-container">
+        <h1>Kids</h1>
+        <ul class="kids-list d-flex gap-1">
+            {% for content in kids %}
             <li class="content-tile">
                 <img src="{% static content.img_path %}" width="145">
             </li>
@@ -146,32 +159,6 @@
     </section>
     {% endif %}
 
-    {% if kids %}
-    <section class="kids-container">
-        <h1>Kids</h1>
-        <ul class="kids-list d-flex gap-1">
-            {% for content in kids %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
-            </li>
-            {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
-
-    {% if music %}
-    <section class="music-container">
-        <h1>Music</h1>
-        <ul class="music-list d-flex gap-1">
-            {% for content in music %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
-            </li>
-            {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
-
     {% if mystery %}
     <section class="mystery-container">
         <h1>Mystery</h1>
@@ -185,50 +172,11 @@
     </section>
     {% endif %}
 
-    {% if reality %}
-    <section class="reality-container">
-        <h1>Reality</h1>
-        <ul class="reality-list d-flex gap-1">
-            {% for content in reality %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
-            </li>
-            {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
-
     {% if romance %}
     <section class="romance-container">
         <h1>Romance</h1>
         <ul class="romance-list d-flex gap-1">
             {% for content in romance %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
-            </li>
-            {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
-
-    {% if scifi %}
-    <section class="scifi-container">
-        <h1>Sci-Fi</h1>
-        <ul class="scifi-list d-flex gap-1">
-            {% for content in scifi %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
-            </li>
-            {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
-
-    {% if thriller %}
-    <section class="thriller-container">
-        <h1>Thriller</h1>
-        <ul class="thriller-list d-flex gap-1">
-            {% for content in thriller %}
             <li class="content-tile">
                 <img src="{% static content.img_path %}" width="145">
             </li>
@@ -262,6 +210,46 @@
         </ul>
     </section>
     {% endif %}
+    
+    {% if history %}
+    <section class="history-container">
+        <h1>History</h1>
+        <ul class="history-list d-flex gap-1">
+            {% for content in history %}
+            <li class="content-tile">
+                <img src="{% static content.img_path %}" width="145">
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    {% if documentary %}
+    <section class="documentary-container">
+        <h1>Documentary</h1>
+        <ul class="documentary-list d-flex gap-1">
+            {% for content in documentary %}
+            <li class="content-tile">
+                <img src="{% static content.img_path %}" width="145">
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+    
+    {% if reality %}
+    <section class="reality-container">
+        <h1>Reality</h1>
+        <ul class="reality-list d-flex gap-1">
+            {% for content in reality %}
+            <li class="content-tile">
+                <img src="{% static content.img_path %}" width="145">
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
 </container>
 
 {% endblock %}

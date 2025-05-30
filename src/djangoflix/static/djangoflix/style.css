@@ -650,55 +650,6 @@
   bottom: calc(anchor(top) - 190px);
 }
 
-/* music carousel */
-
-.music-container {
-    anchor-name: --musicCarousel;
-}
-
-.music-list {
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-    padding: 0;
-}
-
-.music-list::scroll-button(*) {
-    border: 0;
-    font-size: 3rem;
-    background: none;
-    color: rgb(0 0 0 / 0.7);
-    cursor: pointer;
-    position: absolute;
-    position-anchor: --musicCarousel;
-}
-
-.music-list::scroll-button(*):hover,
-.music-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
-  font-size: 3.3rem;
-}
-
-.music-list::scroll-button(*):active {
-  translate: 1px 1px;
-}
-
-.music-list::scroll-button(*):disabled {
-  color: rgb(0 0 0 / 0.0);
-  cursor: unset;
-}
-
-.music-list::scroll-button(left) {
-  content: "◄";
-  right: calc(anchor(left) - 55px);
-  bottom: calc(anchor(top) - 190px);
-}
-
-.music-list::scroll-button(right) {
-  content: "►";
-  left: calc(anchor(right) - 55px);
-  bottom: calc(anchor(top) - 190px);
-}
-
 /* mystery carousel */
 
 .mystery-container {
