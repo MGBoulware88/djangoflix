@@ -31,10 +31,15 @@
     padding: 0 0 0 18px;
 }
 
+.navbar {
+    z-index: 2;
+}
+
 .sticky-table-header {
     position: sticky;
     /* navbar has a 66px height */
     top: 66px;
+    z-index: 2;
 }
 
 .clickable:hover {
@@ -47,4 +52,992 @@
 
 .icon-btn {
     padding: 7px 12px;
+}
+
+/* content carousel styling */
+
+.content-tile {
+    list-style-type: none;
+    border: 1px solid #fafafa;
+    scroll-snap-align: center;
+}
+
+/* action carousel */
+
+.action-container {
+    anchor-name: --actionCarousel;
+}
+
+.action-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.action-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --actionCarousel;
+}
+
+.action-list::scroll-button(*):hover,
+.action-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.action-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.action-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.action-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.action-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* adventure carousel */
+
+.adventure-container {
+    anchor-name: --adventureCarousel;
+}
+
+.adventure-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.adventure-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --adventureCarousel;
+}
+
+.adventure-list::scroll-button(*):hover,
+.adventure-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.adventure-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.adventure-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.adventure-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.adventure-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* animated carousel */
+
+.animated-container {
+    anchor-name: --animatedCarousel;
+}
+
+.animated-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.animated-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --animatedCarousel;
+}
+
+.animated-list::scroll-button(*):hover,
+.animated-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.animated-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.animated-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.animated-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.animated-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* comedy carousel */
+
+.comedy-container {
+    anchor-name: --comedyCarousel;
+}
+
+.comedy-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.comedy-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --comedyCarousel;
+}
+
+.comedy-list::scroll-button(*):hover,
+.comedy-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.comedy-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.comedy-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.comedy-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.comedy-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* crime carousel */
+
+.crime-container {
+    anchor-name: --crimeCarousel;
+}
+
+.crime-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.crime-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --crimeCarousel;
+}
+
+.crime-list::scroll-button(*):hover,
+.crime-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.crime-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.crime-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.crime-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.crime-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* documentary carousel */
+
+.documentary-container {
+    anchor-name: --documentaryCarousel;
+}
+
+.documentary-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.documentary-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --documentaryCarousel;
+}
+
+.documentary-list::scroll-button(*):hover,
+.documentary-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.documentary-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.documentary-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.documentary-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.documentary-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* drama carousel */
+
+.drama-container {
+    anchor-name: --dramaCarousel;
+}
+
+.drama-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.drama-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --dramaCarousel;
+}
+
+.drama-list::scroll-button(*):hover,
+.drama-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.drama-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.drama-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.drama-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.drama-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* family carousel */
+
+.family-container {
+    anchor-name: --familyCarousel;
+}
+
+.family-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.family-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --familyCarousel;
+}
+
+.family-list::scroll-button(*):hover,
+.family-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.family-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.family-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.family-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.family-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* fantasy carousel */
+
+.fantasy-container {
+    anchor-name: --fantasyCarousel;
+}
+
+.fantasy-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.fantasy-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --fantasyCarousel;
+}
+
+.fantasy-list::scroll-button(*):hover,
+.fantasy-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.fantasy-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.fantasy-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.fantasy-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.fantasy-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* history carousel */
+
+.history-container {
+    anchor-name: --historyCarousel;
+}
+
+.history-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.history-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --historyCarousel;
+}
+
+.history-list::scroll-button(*):hover,
+.history-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.history-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.history-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.history-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.history-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* horror carousel */
+
+.horror-container {
+    anchor-name: --horrorCarousel;
+}
+
+.horror-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.horror-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --horrorCarousel;
+}
+
+.horror-list::scroll-button(*):hover,
+.horror-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.horror-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.horror-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.horror-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.horror-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* kids carousel */
+
+.kids-container {
+    anchor-name: --kidsCarousel;
+}
+
+.kids-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.kids-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --kidsCarousel;
+}
+
+.kids-list::scroll-button(*):hover,
+.kids-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.kids-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.kids-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.kids-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.kids-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* music carousel */
+
+.music-container {
+    anchor-name: --musicCarousel;
+}
+
+.music-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.music-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --musicCarousel;
+}
+
+.music-list::scroll-button(*):hover,
+.music-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.music-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.music-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.music-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.music-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* mystery carousel */
+
+.mystery-container {
+    anchor-name: --mysteryCarousel;
+}
+
+.mystery-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.mystery-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --mysteryCarousel;
+}
+
+.mystery-list::scroll-button(*):hover,
+.mystery-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.mystery-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.mystery-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.mystery-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.mystery-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* reality carousel */
+
+.reality-container {
+    anchor-name: --realityCarousel;
+}
+
+.reality-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.reality-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --realityCarousel;
+}
+
+.reality-list::scroll-button(*):hover,
+.reality-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.reality-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.reality-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.reality-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.reality-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* romance carousel */
+
+.romance-container {
+    anchor-name: --romanceCarousel;
+}
+
+.romance-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.romance-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --romanceCarousel;
+}
+
+.romance-list::scroll-button(*):hover,
+.romance-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.romance-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.romance-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.romance-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.romance-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* scifi carousel */
+
+.scifi-container {
+    anchor-name: --scifiCarousel;
+}
+
+.scifi-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.scifi-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --scifiCarousel;
+}
+
+.scifi-list::scroll-button(*):hover,
+.scifi-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.scifi-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.scifi-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.scifi-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.scifi-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* thriller carousel */
+
+.thriller-container {
+    anchor-name: --thrillerCarousel;
+}
+
+.thriller-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.thriller-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --thrillerCarousel;
+}
+
+.thriller-list::scroll-button(*):hover,
+.thriller-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.thriller-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.thriller-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.thriller-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.thriller-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* tv-movie carousel */
+
+.tv-movie-container {
+    anchor-name: --tv-movieCarousel;
+}
+
+.tv-movie-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.tv-movie-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --tv-movieCarousel;
+}
+
+.tv-movie-list::scroll-button(*):hover,
+.tv-movie-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.tv-movie-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.tv-movie-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.tv-movie-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.tv-movie-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+/* war carousel */
+
+.war-container {
+    anchor-name: --warCarousel;
+}
+
+.war-list {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    padding: 0;
+}
+
+.war-list::scroll-button(*) {
+    border: 0;
+    font-size: 3rem;
+    background: none;
+    color: rgb(0 0 0 / 0.7);
+    cursor: pointer;
+    position: absolute;
+    position-anchor: --warCarousel;
+}
+
+.war-list::scroll-button(*):hover,
+.war-list::scroll-button(*):focus {
+  color: rgb(0 0 0 / 1);
+  font-size: 3.3rem;
+}
+
+.war-list::scroll-button(*):active {
+  translate: 1px 1px;
+}
+
+.war-list::scroll-button(*):disabled {
+  color: rgb(0 0 0 / 0.0);
+  cursor: unset;
+}
+
+.war-list::scroll-button(left) {
+  content: "◄";
+  right: calc(anchor(left) - 55px);
+  bottom: calc(anchor(top) - 190px);
+}
+
+.war-list::scroll-button(right) {
+  content: "►";
+  left: calc(anchor(right) - 55px);
+  bottom: calc(anchor(top) - 190px);
 }

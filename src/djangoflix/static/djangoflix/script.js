@@ -1,3 +1,8 @@
+// carousels don't work on Opera
+if (navigator.userAgent.includes("OPR")) {
+    alert("You are using an unsupported browser!\nFor the best experience, we recommend Chrome, Firefox, or Edge.")
+}
+
 // Global vars needed for listeners
 let navDropdownBtn;
 let navDropdownContainer;

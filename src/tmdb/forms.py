@@ -18,5 +18,5 @@ class FetchForm(forms.Form):
 
 
 class UploadForm(forms.Form):
-    type = forms.ChoiceField(choices=TYPE)
+    type = forms.ChoiceField(choices=TYPE, initial="series")
     file = forms.FileField()

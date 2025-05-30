@@ -55,9 +55,52 @@ class WatchableContent(ContentData):
 
 
     def __str__(self) -> str:
-        return self.title
+        return self.name
     
 
+    def is_tv(self) -> bool:
+        return self.content_type == "TV"
+
+
+    @classmethod
+    def get_all_content(cls):
+        try:
+            content = cls.objects.all()
+            if len(content) > 0:
+                return content
+            return None
+        
+        except Exception as e:
+            print(f"\nError: {e}\n")
+            return None
+    
+    
+    @classmethod
+    def get_all_movies(cls):
+        try:
+            movies = cls.objects.filter(content_type="Movie")
+            if len(movies) > 0:
+                return movies
+            return None
+            
+        except Exception as e:
+            print(f"\nError: {e}\n")
+            return None
+    
+
+    @classmethod
+    def get_all_tv(cls):
+        try:
+            tv = cls.objects.filter(content_type="TV")
+            if len(tv) > 0:
+                return tv
+            return None
+        
+        except Exception as e:
+            print(f"\nError: {e}\n")
+            return None
+    
+    
     @classmethod
     def get_one_series_for_season(cls, tmdb_id):
         try:
@@ -84,13 +127,15 @@ class TVSeason(ContentData):
 
 
     ## Make sure WatachableContent is a TV Series before adding
-    def add_series(self, tmdb_id) -> None:
+    def add_series(self, series: WatchableContent) -> None:
         try:
-            series = WatchableContent.get_one_series_for_season(tmdb_id)
-            self.series = series
+            if series.is_tv():
+                self.series = series
+            else:
+                raise TypeError
 
-        except AttributeError:
-            print(f"Series {series} missing required attributes\n")
+        except TypeError:
+            print(f"\ncontent_type of {series} is not 'TV'\n")
     
 
     @classmethod
@@ -119,9 +164,8 @@ class TVEpisode(ContentData):
     runtime = db.models.PositiveIntegerField()
 
 
-    def add_season(self, tmbd_id) -> None:
+    def add_season(self, season: TVSeason) -> None:
         try:
-            season = TVSeason.get_one_season_for_episode(tmbd_id)
             self.season = season
         except AttributeError:
             print(f"\nSeason {season} missing required attributes\n")
