@@ -78,7 +78,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --actionCarousel;
@@ -86,7 +86,7 @@
 
 .action-list::scroll-button(*):hover,
 .action-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -127,7 +127,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --adventureCarousel;
@@ -135,7 +135,7 @@
 
 .adventure-list::scroll-button(*):hover,
 .adventure-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -176,7 +176,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --animatedCarousel;
@@ -184,7 +184,7 @@
 
 .animated-list::scroll-button(*):hover,
 .animated-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -225,7 +225,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --comedyCarousel;
@@ -233,7 +233,7 @@
 
 .comedy-list::scroll-button(*):hover,
 .comedy-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -274,7 +274,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --crimeCarousel;
@@ -282,7 +282,7 @@
 
 .crime-list::scroll-button(*):hover,
 .crime-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -323,7 +323,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --documentaryCarousel;
@@ -331,7 +331,7 @@
 
 .documentary-list::scroll-button(*):hover,
 .documentary-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -372,7 +372,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --dramaCarousel;
@@ -380,7 +380,7 @@
 
 .drama-list::scroll-button(*):hover,
 .drama-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -421,7 +421,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --familyCarousel;
@@ -429,7 +429,7 @@
 
 .family-list::scroll-button(*):hover,
 .family-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -470,7 +470,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --fantasyCarousel;
@@ -478,7 +478,7 @@
 
 .fantasy-list::scroll-button(*):hover,
 .fantasy-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -519,7 +519,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --historyCarousel;
@@ -527,7 +527,7 @@
 
 .history-list::scroll-button(*):hover,
 .history-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -568,7 +568,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --horrorCarousel;
@@ -576,7 +576,7 @@
 
 .horror-list::scroll-button(*):hover,
 .horror-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -617,7 +617,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --kidsCarousel;
@@ -625,7 +625,7 @@
 
 .kids-list::scroll-button(*):hover,
 .kids-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -666,7 +666,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --mysteryCarousel;
@@ -674,7 +674,7 @@
 
 .mystery-list::scroll-button(*):hover,
 .mystery-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -715,7 +715,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --realityCarousel;
@@ -723,7 +723,7 @@
 
 .reality-list::scroll-button(*):hover,
 .reality-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -764,7 +764,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --romanceCarousel;
@@ -772,7 +772,7 @@
 
 .romance-list::scroll-button(*):hover,
 .romance-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -813,7 +813,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --scifiCarousel;
@@ -821,7 +821,7 @@
 
 .scifi-list::scroll-button(*):hover,
 .scifi-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -862,7 +862,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --thrillerCarousel;
@@ -870,7 +870,7 @@
 
 .thriller-list::scroll-button(*):hover,
 .thriller-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -911,7 +911,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --tv-movieCarousel;
@@ -919,7 +919,7 @@
 
 .tv-movie-list::scroll-button(*):hover,
 .tv-movie-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
@@ -960,7 +960,7 @@
     border: 0;
     font-size: 3rem;
     background: none;
-    color: rgb(0 0 0 / 0.7);
+    color: rgb(13 110 252 / 0.8);
     cursor: pointer;
     position: absolute;
     position-anchor: --warCarousel;
@@ -968,7 +968,7 @@
 
 .war-list::scroll-button(*):hover,
 .war-list::scroll-button(*):focus {
-  color: rgb(0 0 0 / 1);
+  color: rgb(13 110 252 / 1);
   font-size: 3.3rem;
 }
 
