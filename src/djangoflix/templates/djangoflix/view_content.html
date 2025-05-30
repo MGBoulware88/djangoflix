@@ -9,7 +9,9 @@
         <ul class="action-list d-flex gap-1">
             {% for content in action %}
             <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+                <a href="{% url 'djangoflix:details' content.id %}">
+                    <img src="{% static content.img_path %}" width="145">
+                </a>
             </li>
             {% endfor %}
         </ul>

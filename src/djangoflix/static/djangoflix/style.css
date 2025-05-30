@@ -25,6 +25,20 @@
     }
 }
 
+.back-arrow {
+    font-size: 2.5rem;
+}
+
+.back-arrow:focus,
+.back-arrow:hover {
+    font-size: 2.8rem;
+    translate: -1px -1px;
+}
+
+.back-arrow:active {
+    translate: -5px 0px;
+}
+
 .nonfield {
     list-style-type: "!!! ";
     margin: 0;

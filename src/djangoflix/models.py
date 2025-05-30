@@ -65,7 +65,7 @@ class WatchableContent(ContentData):
     @classmethod
     def get_all_content(cls):
         try:
-            content = cls.objects.all()
+            content = cls.objects.filter(release_date__lte=timezone.now())
             if len(content) > 0:
                 return content
             return None
@@ -78,7 +78,8 @@ class WatchableContent(ContentData):
     @classmethod
     def get_all_movies(cls):
         try:
-            movies = cls.objects.filter(content_type="Movie")
+            movies = cls.objects.filter(content_type="Movie")\
+                                .filter(release_date__lte=timezone.now())
             if len(movies) > 0:
                 return movies
             return None
@@ -91,13 +92,27 @@ class WatchableContent(ContentData):
     @classmethod
     def get_all_tv(cls):
         try:
-            tv = cls.objects.filter(content_type="TV")
+            tv = cls.objects.filter(content_type="TV")\
+                            .filter(release_date__lte=timezone.now())
             if len(tv) > 0:
                 return tv
             return None
         
         except Exception as e:
             print(f"\nError: {e}\n")
+            return None
+    
+    
+    @classmethod
+    def get_one_content_by_id(cls, id):
+        try:
+            content = cls.objects.get(pk=id)
+            return content
+        except cls.DoesNotExist:
+            print(f"\nNo content found with id {id}\n")
+            return None
+        except cls.MultipleObjectsReturned:
+            print(f"\nMultiple results found for content with id {id}\n")
             return None
     
     

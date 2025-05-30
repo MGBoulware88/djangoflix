@@ -14,5 +14,5 @@ urlpatterns = [
     path("tv/", views.tv, name="tv"),
     path("favorites/", views.favorites, name="favorites"),
     path("search/", views.search, name="search"),
-    path("details/<int:content_id>/", views.details, name="details"),
+    path("details/<int:id>/", views.details, name="details"),
 ]

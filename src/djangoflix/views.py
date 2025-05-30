@@ -177,8 +177,11 @@ def search(request):
     return HttpResponse("Hello, search!")
 
 
-def details(request):
-    return HttpResponse("Hello, Details!")
+def details(request, id):
+    this_content = WatchableContent.get_one_content_by_id(id)
+    context = {"content": this_content}
+
+    return render(request, "djangoflix/view_details.html", context)
 
 
 ### Consolidation function for browse, movies, & tv
@@ -257,7 +260,8 @@ def _get_context(all_content) -> dict:
                 case "Western":
                     western.append(content)
                 case _:
-                    print(f"\nUnmapped genre name: {genre.name}\n")
+                    #print(f"\nUnmapped genre name: {genre.name}\n")
+                    continue
 
     context = {
         "action": action,

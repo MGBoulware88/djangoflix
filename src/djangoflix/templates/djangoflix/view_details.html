@@ -1,0 +1,26 @@
+{% extends "djangoflix/base.html" %}
+{% load static %}
+{% block content %}
+<a href="javascript:history.go(-1)">
+    <i class="back-arrow fa-solid fa-chevron-left"></i>
+</a>
+
+<!-- no content found -->
+{% if content == None %}
+<br>
+<hr>
+<br>
+<h1 class="text-center">🙁 We don't have any details for the selected content 🙁</h1>
+<br>
+<hr>
+<br>
+
+{% elif content.content_type == "Movie" %}
+
+
+{% else %}
+
+
+{% endif %}
+
+{% endblock %}

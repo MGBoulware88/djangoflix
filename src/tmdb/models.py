@@ -194,7 +194,7 @@ class TMDBMovie(ContentData):
     def _to_dict(self) -> dict:
         movie_dict = super()._to_dict()
         movie_dict["content_type"] = "Movie"
-        movie_dict["img_path"] = "movie" + self.img_path
+        movie_dict["img_path"] = "tmdb/movie" + self.img_path
         movie_dict["duration"] = self.runtime
 
         del movie_dict["runtime"]
