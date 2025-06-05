@@ -1,7 +1,7 @@
 {% extends "djangoflix/base.html" %}
 {% load static %}
 {% block content %}
-<a href="javascript:history.go(-1)">
+<a href="javascript:history.go(-1)" id="TOP">
     <i class="back-arrow fa-solid fa-chevron-left"></i>
 </a>
 
@@ -18,9 +18,15 @@
 {% elif content.content_type == "Movie" %}
 
 
-{% else %}
+{% else %} <!-- content_type == "TV" -->
 
 
 {% endif %}
+
+<section class="d-flex justify-content-center align-content-center gap-2">
+    <a href="{% url 'djangoflix:home' %}"><button class="btn btn-success">Home</button></a>
+    <a href="{% url 'djangoflix:movies' %}"><button class="btn btn-primary">Movies</button></a>
+    <a href="{% url 'djangoflix:tv' %}"><button class="btn orange-btn">TV Shows</button></a>  
+</section>
 
 {% endblock %}

@@ -8,10 +8,20 @@
         <h1 class="text-primary">Action</h1>
         <ul class="action-list d-flex gap-1">
             {% for content in action %}
-            <li class="content-tile">
-                <a href="{% url 'djangoflix:details' content.id %}">
-                    <img src="{% static content.img_path %}" width="145">
-                </a>
+            <li id="action{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="action{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="action{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -23,8 +33,20 @@
         <h1 class="text-primary">Comedy</h1>
         <ul class="comedy-list d-flex gap-1">
             {% for content in comedy %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="comedy{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="comedy{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="comedy{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -36,8 +58,20 @@
         <h1 class="text-primary">Drama</h1>
         <ul class="drama-list d-flex gap-1">
             {% for content in drama %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="drama{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="drama{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="drama{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -49,8 +83,20 @@
         <h1 class="text-primary">Sci-Fi</h1>
         <ul class="scifi-list d-flex gap-1">
             {% for content in scifi %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="scifi{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="scifi{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="scifi{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -62,8 +108,20 @@
         <h1 class="text-primary">Thriller</h1>
         <ul class="thriller-list d-flex gap-1">
             {% for content in thriller %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="thriller{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="thriller{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="thriller{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -75,8 +133,20 @@
         <h1 class="text-primary">Adventure</h1>
         <ul class="adventure-list d-flex gap-1">
             {% for content in adventure %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="adventure{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="adventure{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="adventure{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -88,8 +158,20 @@
         <h1 class="text-primary">Animated</h1>
         <ul class="animated-list d-flex gap-1">
             {% for content in animated %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="animated{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="animated{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="animated{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -101,8 +183,20 @@
         <h1 class="text-primary">Crime</h1>
         <ul class="crime-list d-flex gap-1">
             {% for content in crime %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="crime{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="crime{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="crime{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -114,8 +208,20 @@
         <h1 class="text-primary">Fantasy</h1>
         <ul class="fantasy-list d-flex gap-1">
             {% for content in fantasy %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="fantasy{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="fantasy{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="fantasy{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -127,8 +233,20 @@
         <h1 class="text-primary">Family</h1>
         <ul class="family-list d-flex gap-1">
             {% for content in family %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="family{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="family{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="family{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -140,8 +258,20 @@
         <h1 class="text-primary">Kids</h1>
         <ul class="kids-list d-flex gap-1">
             {% for content in kids %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="kids{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="kids{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="kids{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -153,8 +283,20 @@
         <h1 class="text-primary">Horror</h1>
         <ul class="horror-list d-flex gap-1">
             {% for content in horror %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="horror{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="horror{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="horror{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -166,8 +308,20 @@
         <h1 class="text-primary">Mystery</h1>
         <ul class="mystery-list d-flex gap-1">
             {% for content in mystery %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="mystery{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="mystery{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="mystery{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -179,8 +333,20 @@
         <h1 class="text-primary">Romance</h1>
         <ul class="romance-list d-flex gap-1">
             {% for content in romance %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="romance{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="romance{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="romance{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -192,8 +358,20 @@
         <h1 class="text-primary">TV Movie</h1>
         <ul class="tv-movie-list d-flex gap-1">
             {% for content in tv_movie %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="tv_movie{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="tv_movie{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="tv_movie{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -205,8 +383,20 @@
         <h1 class="text-primary">War & Politics</h1>
         <ul class="war-list d-flex gap-1">
             {% for content in war %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="war{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="war{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="war{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -218,8 +408,20 @@
         <h1 class="text-primary">History</h1>
         <ul class="history-list d-flex gap-1">
             {% for content in history %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="history{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="history{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="history{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -231,8 +433,20 @@
         <h1 class="text-primary">Documentary</h1>
         <ul class="documentary-list d-flex gap-1">
             {% for content in documentary %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="documentary{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="documentary{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="documentary{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -244,8 +458,20 @@
         <h1 class="text-primary">Reality</h1>
         <ul class="reality-list d-flex gap-1">
             {% for content in reality %}
-            <li class="content-tile">
-                <img src="{% static content.img_path %}" width="145">
+            <li id="reality{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+                <div class="position-relative">
+                    <img src="{% static content.img_path %}" width="145" class="position-static">
+                    <div id="reality{{ content.id }}-watch" class="d-none watch-icon-container">
+                        <a href="{% url 'djangoflix:watch' content.id %}">
+                            <i class="fa-solid fa-eye"></i> Watch
+                        </a>
+                    </div>
+                    <div id="reality{{ content.id }}-view" class="d-none details-icon-container">
+                        <a href="{% url 'djangoflix:details' content.id %}">
+                            <i class="fa-solid fa-magnifying-glass"></i> Details
+                        </a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>

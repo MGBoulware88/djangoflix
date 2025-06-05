@@ -91,5 +91,21 @@ function selectIcon(selectedIconBtn) {
     currentIconBtn.classList.add("btn-outline-light");
     selectedIconBtn.classList.remove("btn-outline-light");
     selectedIconBtn.classList.add("btn-outline-primary");
+}
 
+// toggle show/hide watch & view content icons on hover
+function toggleIcons(elem) {
+    // if image is clipped, do nothing
+    if (
+        elem.getBoundingClientRect().right > 
+        elem.parentElement.getBoundingClientRect().right
+        || elem.getBoundingClientRect().left <
+        elem.parentElement.getBoundingClientRect().left
+    ) {
+        return;
+    }
+    const watchEl = document.getElementById(elem.getAttribute("id") + "-watch");
+    const viewEl = document.getElementById(elem.getAttribute("id") + "-view");
+    watchEl.classList.toggle("d-none");
+    viewEl.classList.toggle("d-none");
 }

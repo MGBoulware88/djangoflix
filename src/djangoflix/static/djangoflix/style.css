@@ -68,13 +68,47 @@
     padding: 7px 12px;
 }
 
+.orange-btn {
+  background-color: #f57c02;
+  color: #fafafa;
+  border-color: #f57c02;
+}
+
+/* TODO: Add :hover :active :link to .orange-btn */
+
+.watch-icon-container {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  height: 50%;
+  text-align: center;
+  padding-top: 25px;
+  background-color: rgb(12 12 12 / 0.75);
+  font-size: 22px;
+}
+
+.details-icon-container {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  height: 50%;
+  text-align: center;
+  background-color: rgb(12 12 12 / 0.75);
+  font-size: 22px;
+}
+
 /* content carousel styling */
 
 .content-tile {
     list-style-type: none;
     border: 1px solid #fafafa;
     scroll-snap-align: center;
+
+    a {
+      text-decoration: none;
+    }
 }
+
 
 /* action carousel */
 

@@ -184,6 +184,13 @@ def details(request, id):
     return render(request, "djangoflix/view_details.html", context)
 
 
+def watch(request, id):
+    this_content = WatchableContent.get_one_content_by_id(id)
+    context = {"content": this_content}
+
+    return render(request, "djangoflix/watch_content.html", context)
+
+
 ### Consolidation function for browse, movies, & tv
 def _get_context(all_content) -> dict:
     action = []
