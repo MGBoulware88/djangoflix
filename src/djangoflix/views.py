@@ -209,10 +209,21 @@ def details(request, id):
         for genre in all_genres:
             genres.append(genre.name)
     
+    seasons = []
+    if this_content.content_type == "TV":
+        this_content.all_seasons = this_content.seasons.all()
+        for season in this_content.all_seasons:
+            episodes = season.episodes.all()
+            season.all_episodes = []
+            seasons.append(season)
+            for episode in episodes:
+                season.all_episodes.append(episode)
+
     context = {
         "content": this_content,
         "genres": genres,
-        "favorite": favorite,    
+        "favorite": favorite,
+        "seasons": seasons,
     }
 
     return render(request, "djangoflix/view_details.html", context)

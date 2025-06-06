@@ -35,15 +35,75 @@
 <section class="ps-5 mt-2 d-flex gap-2">
     <img src="{% static content.img_path %}" height="500">
     <div class="d-flex flex-column gap-1 align-content-center justify-content-start">
-        <p>Runtime: {{ content.duration }}minutes</p>
-        <p>Genre(s): {{ genres|join:", " }}</p>
-        <p>Released: {{ content.release_date }}</p>
+        <p><span class="fw-bold">Runtime:</span> {{ content.duration }}minutes</p>
+        <p><span class="fw-bold">Genre(s):</span> {{ genres|join:", " }}</p>
+        <p><span class="fw-bold">Released:</span> {{ content.release_date }}</p>
         <p>{{ content.overview }}</p>
     </div>
 </section>
 
 {% else %} <!-- content_type == "TV" -->
+<h1 class="text-nowrap d-inline ps-3">{{ content.name }}</h1>
+{% if favorite %}
+<form action="{% url 'djangoflix:favorite' content.id 'details' 'remove' %}" method="POST"
+    class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
+    onclick="submitForm('favoriteFormA')"
+    id="favoriteFormA">
+    {% csrf_token %}
+    <i title="Unfavorite" class="fa-solid fa-heart"></i>
+</form>
+{% else %}
+<form action="{% url 'djangoflix:favorite' content.id 'details' 'add' %}" method="POST"
+    class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
+    onclick="submitForm('favoriteFormB')"
+    id="favoriteFormB">
+    {% csrf_token %}
+    <i title="Favorite" class="fa-regular fa-heart"></i>
+</form>
+{% endif %}
+<section class="ps-5 mt-2 d-flex gap-2">
+    <img src="{% static content.img_path %}" height="500">
+    <div class="d-flex flex-column gap-1 align-content-center justify-content-start">
+        <p><span class="fw-bold">{{ content.duration }} Seasons</span></p>
+        <p><span class="fw-bold">Genre(s):</span> {{ genres|join:", " }}</p>
+        <p><span class="fw-bold">Released:</span> {{ content.release_date }}</p>
+        <p>{{ content.overview }}</p>
+    </div>
+</section>
+<br>
+<section>
+    <label for="tvSeasons">Season: </label>
+    <select title="Choose Season" id="tvSeasons" class="season-select mb-1">
+    {% for season in seasons %}
+    {% if "Special" in season.name %}
 
+    {% else %}
+        <option value="{{ season.name }}">{{ season.name }}</option>
+    {% endif %}
+    {% endfor %}
+    </select>
+    <hr>
+    <section id="episodesDefault" class="w-100">
+    {% for season in seasons %}
+    {% if "Special" in season.name %}
+    {% else %}
+    {% for episode in season.all_episodes %}
+        <div class="d-flex gap-1 w-100">
+            <img src="{% static episode.img_path %}" height="160">
+            <div class="d-flex flex-column gap-1 w-100">
+                <div class="d-flex justify-content-between">
+                    <h2 class="fs-6">{{ episode.name }}</h2>
+                    <p><span class="fw-bold fs-6">Runtime:</span> {{ episode.runtime }}m</p>
+                </div>
+                <p>{{ episode.overview }}</p>
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+    </section>
+</section>
 
 {% endif %}
 
