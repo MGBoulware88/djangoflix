@@ -16,4 +16,5 @@ urlpatterns = [
     path("search/", views.search, name="search"),
     path("details/<int:id>/", views.details, name="details"),
     path("watch/<int:id>/", views.watch, name="watch"),
+    path("favorite/<int:id>/<str:destination>/<str:action>/", views.favorite, name="favorite"),
 ]

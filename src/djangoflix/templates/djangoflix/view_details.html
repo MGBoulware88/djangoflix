@@ -1,9 +1,7 @@
 {% extends "djangoflix/base.html" %}
 {% load static %}
 {% block content %}
-<a href="javascript:history.go(-1)" id="TOP">
-    <i class="back-arrow fa-solid fa-chevron-left"></i>
-</a>
+<a href="javascript:history.go(-1)" title="Go Back"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
 
 <!-- no content found -->
 {% if content == None %}
@@ -16,17 +14,43 @@
 <br>
 
 {% elif content.content_type == "Movie" %}
-
+<h1 class="text-nowrap d-inline ps-3">{{ content.name }}</h1>
+{% if favorite %}
+<form action="{% url 'djangoflix:favorite' content.id 'details' 'remove' %}" method="POST"
+    class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
+    onclick="submitForm('favoriteFormA')"
+    id="favoriteFormA">
+    {% csrf_token %}
+    <i title="Unfavorite" class="fa-solid fa-heart"></i>
+</form>
+{% else %}
+<form action="{% url 'djangoflix:favorite' content.id 'details' 'add' %}" method="POST"
+    class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
+    onclick="submitForm('favoriteFormB')"
+    id="favoriteFormB">
+    {% csrf_token %}
+    <i title="Favorite" class="fa-regular fa-heart"></i>
+</form>
+{% endif %}
+<section class="ps-5 mt-2 d-flex gap-2">
+    <img src="{% static content.img_path %}" height="500">
+    <div class="d-flex flex-column gap-1 align-content-center justify-content-start">
+        <p>Runtime: {{ content.duration }}minutes</p>
+        <p>Genre(s): {{ genres|join:", " }}</p>
+        <p>Released: {{ content.release_date }}</p>
+        <p>{{ content.overview }}</p>
+    </div>
+</section>
 
 {% else %} <!-- content_type == "TV" -->
 
 
 {% endif %}
 
-<section class="d-flex justify-content-center align-content-center gap-2">
-    <a href="{% url 'djangoflix:home' %}"><button class="btn btn-success">Home</button></a>
-    <a href="{% url 'djangoflix:movies' %}"><button class="btn btn-primary">Movies</button></a>
-    <a href="{% url 'djangoflix:tv' %}"><button class="btn orange-btn">TV Shows</button></a>  
+<section class="d-flex justify-content-between align-content-center gap-1 mt-3 ms-5 quick-links">
+    <a href="{% url 'djangoflix:home' %}"><button class="btn btn-success"><i class="fa-solid fa-house"></i> Home</button></a>
+    <a href="{% url 'djangoflix:movies' %}"><button class="btn btn-primary"><i class="fa-solid fa-film"></i> Movies</button></a>
+    <a href="{% url 'djangoflix:tv' %}"><button class="btn orange-btn"><i class="fa-solid fa-tv"></i> TV</button></a>  
 </section>
 
 {% endblock %}

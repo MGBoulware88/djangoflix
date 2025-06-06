@@ -109,3 +109,12 @@ function toggleIcons(elem) {
     watchEl.classList.toggle("d-none");
     viewEl.classList.toggle("d-none");
 }
+
+//toggle favorite
+function toggleFavorite(element) {
+    contentId = element.getAttribute("id");
+    console.log("toggling favorite");
+    // POST to /djangoflix/favorite/<id>
+}
+
+console.log(history);

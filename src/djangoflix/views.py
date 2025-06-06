@@ -178,8 +178,42 @@ def search(request):
 
 
 def details(request, id):
+    if not request.method == "GET":
+        return HttpResponseNotAllowed(["GET"])
+    try:
+        this_profile = Profile.get_one_profile_by_id(request.session["profile"])
+        if not this_profile:
+            raise Profile.DoesNotExist
+    # KeyError catches login skippers, DoesNotExist catches invalid session data
+    except (KeyError, Profile.DoesNotExist):
+        if not "account" in request.session:
+            # Send them to the login page, not register
+            # If they are trying to get to home, they probably have an account
+            return redirect(reverse_lazy("accounts:login"))
+        elif not "profile" in request.session:
+            return redirect(reverse_lazy("djangoflix:profiles"))
+        else:
+            return redirect(reverse_lazy("accounts:logout"))
+    
     this_content = WatchableContent.get_one_content_by_id(id)
-    context = {"content": this_content}
+    
+    profile = Profile.get_one_profile_by_id(request.session["profile"])
+    if this_content in profile.favorites.all():
+        favorite = True
+    else:
+        favorite = False
+    
+    genres = []
+    if this_content:
+        all_genres = this_content.genres.all()
+        for genre in all_genres:
+            genres.append(genre.name)
+    
+    context = {
+        "content": this_content,
+        "genres": genres,
+        "favorite": favorite,    
+    }
 
     return render(request, "djangoflix/view_details.html", context)
 
@@ -190,6 +224,31 @@ def watch(request, id):
 
     return render(request, "djangoflix/watch_content.html", context)
 
+
+def favorite(request, id, destination: str, action: str):
+    if not request.method == "POST":
+        return HttpResponseNotAllowed(["POST"])
+    
+    profile = Profile.get_one_profile_by_id(request.session["profile"])
+    content = WatchableContent.get_one_content_by_id(id)
+    if action == "add":
+        profile.favorites.add(content)
+    elif action == "remove":
+        profile.favorites.remove(content)
+    else:
+        print(f"\nNo action provided for {content}\n")
+    
+    profile.save()
+
+    # All views that allow favoriting content
+    match destination:
+        case "details":
+            return redirect(reverse_lazy("djangoflix:details", kwargs={"id": id}))
+        case "watch":
+            return redirect(reverse_lazy("djangoflix:watch", kwargs={"id": id}))
+        case _:
+            print(f"\nMissing or invalid destination of {destination}\n")
+            return HttpResponse("😒")
 
 ### Consolidation function for browse, movies, & tv
 def _get_context(all_content) -> dict:
