@@ -432,15 +432,17 @@ class TMDBTVSeries(ContentData):
             responsejson = response.json()
             this_series = TMDBTVSeries._process_series(responsejson)
             this_series._fetch_series_image()
-            this_series._add_to_djangoflix(
+            added: WatchableContent | None = this_series._add_to_djangoflix(
                 {"genres": responsejson["genres"]}
             )
             # (optional) Write to JSON to reduce API usage
             normalized_name = this_series.name.replace(":", " -")
             path = f"TV/{normalized_name}/{normalized_name}"
             ContentData._write_to_json(responsejson, path)
+
             # Now fetch the season data, which will fetch the episode data
-            TMDBTVSeason.fetch_all_seasons_for_series(this_series)
+            if added:
+                TMDBTVSeason.fetch_all_seasons_for_series(this_series, added)
             
         except json.JSONDecodeError:
             print("JSON decode failed!")
@@ -599,8 +601,9 @@ class TMDBTVSeason(ContentData):
         return False
         
 
+    # Called when adding entire TV Series
     @classmethod
-    def fetch_all_seasons_for_series(cls, series: TMDBTVSeries):
+    def fetch_all_seasons_for_series(cls, series: TMDBTVSeries, django_series: WatchableContent):
         if not hasattr(series, "season_data"):
             print(f"\nThis series is missing season data:\n{series}\n")
             return
@@ -609,12 +612,14 @@ class TMDBTVSeason(ContentData):
             try:
                 cls._fetch_one_season_for_series_with_season_number(
                     series,
+                    django_series,
                     season['season_number']
                 )
             except KeyError:
                 print(f"\nThis season doesn't have a number:\n{season}\n")
     
 
+    # Called when TV Season chosen from TMDB FetchForm
     @classmethod
     def fetch_one_season_by_series_id(cls, series_id: str, season_number: str):
         # Just get the series and call existing methods
@@ -622,9 +627,14 @@ class TMDBTVSeason(ContentData):
         if not series:
             print("Can't fetch season with not found series")
             return
+        django_series = WatchableContent.get_one_content_by_tmdb_id(series.tmdb_id)
+        if not django_series:
+            print("Can't fetch season with not found django series")
+            return
         
         cls._fetch_one_season_for_series_with_season_number(
             series,
+            django_series,
             int(season_number)
         )
 
@@ -633,13 +643,14 @@ class TMDBTVSeason(ContentData):
     def _fetch_one_season_for_series_with_season_number(
                                                           cls,
                                                           series: TMDBTVSeries,
+                                                          django_series: WatchableContent,
                                                           season_number: int
                                                        ) -> None:
         try:
             response = ContentData._fetch_data(
                 "/tv/{}/season/{}".format(series.tmdb_id, season_number)
             )
-
+            
             if not response:
                 print("Invalid response object")
                 return
@@ -651,14 +662,15 @@ class TMDBTVSeason(ContentData):
             responsejson = response.json()
             this_season = TMDBTVSeason._process_season(responsejson, series)
             this_season._fetch_season_image()
-            this_season._add_to_djangoflix(series)
+            added: TVSeason | None = this_season._add_to_djangoflix(django_series)
             # (optional) Write to JSON to reduce API usage
             n_series_name = series.name.replace(":", " -")
             n_season_name = this_season.name.replace(":", " -")
             path = f"TV/{n_series_name}/{n_season_name}"
             ContentData._write_to_json(responsejson, path)
             # Now grab all the episode data for this season
-            TMDBTVEpisode.fetch_all_episodes_for_season(this_season)
+            if added:
+                TMDBTVEpisode.fetch_all_episodes_for_season(this_season, added)
             
         except json.JSONDecodeError:
             print("JSON decode failed!")
@@ -814,7 +826,7 @@ class TMDBTVEpisode(ContentData):
     
     
     @classmethod
-    def fetch_all_episodes_for_season(cls, season: TMDBTVSeason):
+    def fetch_all_episodes_for_season(cls, season: TMDBTVSeason, django_season: TVSeason):
         if not hasattr(season, "episode_data"):
             print(f"\nThis season is missing episode data:\n{season}\n")
             return
@@ -823,6 +835,7 @@ class TMDBTVEpisode(ContentData):
             try:
                 cls._fetch_one_episode_for_season_with_episode_number(
                     season,
+                    django_season,
                     episode["episode_number"]
                 )
             except KeyError:
@@ -833,6 +846,7 @@ class TMDBTVEpisode(ContentData):
     def _fetch_one_episode_for_season_with_episode_number(
                                                           cls,
                                                           season: TMDBTVSeason,
+                                                          django_season: TVSeason,
                                                           episode_number: int
                                                          ):
         try:
@@ -843,7 +857,7 @@ class TMDBTVEpisode(ContentData):
                     episode_number
                 )
             )
-
+            print(response)
             if not response:
                 print("Invalid response object")
                 return
@@ -855,7 +869,7 @@ class TMDBTVEpisode(ContentData):
             responsejson = response.json()
             this_episode = TMDBTVEpisode._process_episode(responsejson, season)
             this_episode._fetch_episode_image()
-            this_episode._add_to_djangoflix(season)
+            this_episode._add_to_djangoflix(django_season)
             # (optional) Write to JSON to reduce API usage
             n_series_name = season.series.name.replace(":", " -")
             n_season_name = season.name.replace(":", " -")

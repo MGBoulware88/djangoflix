@@ -1,6 +1,10 @@
 {% extends "djangoflix/base.html" %}
-{% load static %}
 {% block content %}
-
-
+<p class="fs-4">Thanks for watching <span class="fw-bold">{{ content.name }}</span>! 🤠</p>
+<hr>
+<section class="d-flex justify-content-between align-content-center gap-1 mt-3 quick-links">
+    <a href="{% url 'djangoflix:home' %}"><button class="btn btn-success"><i class="fa-solid fa-house"></i> Home</button></a>
+    <a href="{% url 'djangoflix:movies' %}"><button class="btn btn-primary"><i class="fa-solid fa-film"></i> Movies</button></a>
+    <a href="{% url 'djangoflix:tv' %}"><button class="btn orange-btn"><i class="fa-solid fa-tv"></i> TV</button></a>  
+</section>
 {% endblock %}

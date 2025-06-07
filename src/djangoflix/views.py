@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseNotAllowed
 
 from accounts.forms import ProfileForm
-from .models import Account, Profile, WatchableContent
+from .models import Account, Profile, WatchableContent, TVEpisode
 
 
 ### landing, pre-login/reg to djangoflix/
@@ -187,8 +187,6 @@ def details(request, id):
     # KeyError catches login skippers, DoesNotExist catches invalid session data
     except (KeyError, Profile.DoesNotExist):
         if not "account" in request.session:
-            # Send them to the login page, not register
-            # If they are trying to get to home, they probably have an account
             return redirect(reverse_lazy("accounts:login"))
         elif not "profile" in request.session:
             return redirect(reverse_lazy("djangoflix:profiles"))
@@ -230,6 +228,21 @@ def details(request, id):
 
 
 def watch(request, id):
+    if not request.method == "GET":
+        return HttpResponseNotAllowed(["GET"])
+    try:
+        this_profile = Profile.get_one_profile_by_id(request.session["profile"])
+        if not this_profile:
+            raise Profile.DoesNotExist
+    # KeyError catches login skippers, DoesNotExist catches invalid session data
+    except (KeyError, Profile.DoesNotExist):
+        if not "account" in request.session:
+            return redirect(reverse_lazy("accounts:login"))
+        elif not "profile" in request.session:
+            return redirect(reverse_lazy("djangoflix:profiles"))
+        else:
+            return redirect(reverse_lazy("accounts:logout"))
+        
     this_content = WatchableContent.get_one_content_by_id(id)
     context = {"content": this_content}
 

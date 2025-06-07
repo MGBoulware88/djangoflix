@@ -115,6 +115,19 @@ class WatchableContent(ContentData):
             print(f"\nMultiple results found for content with id {id}\n")
             return None
     
+
+    @classmethod
+    def get_one_content_by_tmdb_id(cls, tmdb_id):
+        try:
+            content = cls.objects.get(tmdb_id=tmdb_id)
+            return content
+        except cls.DoesNotExist:
+            print(f"\nNo content found with id {tmdb_id}\n")
+            return None
+        except cls.MultipleObjectsReturned:
+            print(f"\nMultiple results found for content with id {tmdb_id}\n")
+            return None
+    
     
     @classmethod
     def get_one_series_for_season(cls, tmdb_id):
@@ -184,6 +197,19 @@ class TVEpisode(ContentData):
             self.season = season
         except AttributeError:
             print(f"\nSeason {season} missing required attributes\n")
+
+
+    @classmethod
+    def get_one_episode_by_id(cls, id: int):
+        try:
+            episode = cls.objects.get(pk=id)
+            return episode
+        except cls.DoesNotExist:
+            print(f"Could not find episode with id {id}\n")
+            return None
+        except cls.MultipleObjectsReturned:
+            print(f"Multiple results for episode with id {id}\n")
+            return None
 
 
 class Account(SharedData):

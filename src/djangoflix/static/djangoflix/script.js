@@ -117,4 +117,22 @@ function toggleFavorite(element) {
     // POST to /djangoflix/favorite/<id>
 }
 
-console.log(history);
+// Season select
+function toggleEpisodes(elem) {
+    seasonId = elem.value;
+    console.log(`seasonId: ${seasonId}`);
+    current = document.querySelector(".selected");
+    console.log(`current: ${current}`);
+    selected = document.getElementById(seasonId + "Episodes");
+    console.log(`selected ${selected}`);
+    current.classList.remove("selected");
+    current.classList.add("d-none");
+    selected.classList.remove("d-none");
+    selected.classList.add("selected");
+}
+
+// toggle watch icon for Episodes on view_details.html
+function toggleWatchIcon(elem) {
+    const watchEl = document.getElementById(elem.getAttribute("id") + "-watch");
+    watchEl.classList.toggle("d-none");
+}

@@ -32,15 +32,21 @@
     <i title="Favorite" class="fa-regular fa-heart"></i>
 </form>
 {% endif %}
-<section class="ps-5 mt-2 d-flex gap-2">
+<section class="ps-5 pe-3 mt-2 d-flex gap-2">
     <img src="{% static content.img_path %}" height="500">
-    <div class="d-flex flex-column gap-1 align-content-center justify-content-start">
+    <div class="d-flex flex-column gap-1 align-content-start justify-content-start h-100">
         <p><span class="fw-bold">Runtime:</span> {{ content.duration }}minutes</p>
         <p><span class="fw-bold">Genre(s):</span> {{ genres|join:", " }}</p>
         <p><span class="fw-bold">Released:</span> {{ content.release_date }}</p>
         <p>{{ content.overview }}</p>
     </div>
 </section>
+<div class="d-flex ms-5 mt-2 watch-movie">
+    <a href="{% url 'djangoflix:watch' content.id %}">
+        <button class="btn btn-primary flex-grow-1"><i class="fa-solid fa-circle-play"></i> Watch</button>
+    </a>
+</div>
+<hr>
 
 {% else %} <!-- content_type == "TV" -->
 <h1 class="text-nowrap d-inline ps-3">{{ content.name }}</h1>
@@ -61,35 +67,49 @@
     <i title="Favorite" class="fa-regular fa-heart"></i>
 </form>
 {% endif %}
-<section class="ps-5 mt-2 d-flex gap-2">
+<section class="ps-5 pe-3 mt-2 d-flex gap-2">
     <img src="{% static content.img_path %}" height="500">
     <div class="d-flex flex-column gap-1 align-content-center justify-content-start">
-        <p><span class="fw-bold">{{ content.duration }} Seasons</span></p>
+        <p class="fw-bold">{{ content.duration }} Season{{ content.duration|pluralize }}</p>
         <p><span class="fw-bold">Genre(s):</span> {{ genres|join:", " }}</p>
         <p><span class="fw-bold">Released:</span> {{ content.release_date }}</p>
         <p>{{ content.overview }}</p>
     </div>
 </section>
 <br>
-<section>
+<section class="px-4">
     <label for="tvSeasons">Season: </label>
-    <select title="Choose Season" id="tvSeasons" class="season-select mb-1">
+    <select title="Choose Season" id="tvSeasons" class="mb-1" onchange="toggleEpisodes(this)">
     {% for season in seasons %}
-    {% if "Special" in season.name %}
-
+    {% if forloop.first %}
+        <option selected value="{{ season.id }}">{{ season.name }}</option>
     {% else %}
-        <option value="{{ season.name }}">{{ season.name }}</option>
+        <option value="{{ season.id }}">{{ season.name }}</option>
     {% endif %}
     {% endfor %}
     </select>
     <hr>
-    <section id="episodesDefault" class="w-100">
     {% for season in seasons %}
-    {% if "Special" in season.name %}
+    {% if forloop.first %}
+    <section id="{{ season.id }}Episodes" class="selected w-100">
     {% else %}
-    {% for episode in season.all_episodes %}
-        <div class="d-flex gap-1 w-100">
-            <img src="{% static episode.img_path %}" height="160">
+    <section id="{{ season.id }}Episodes" class="d-none w-100">
+    {% endif %}
+        {% if not season.all_episodes %}
+        <p class="fs-3">We can't find those episodes 🙁</p>
+        <p class="fs-4">Please select a different Season.</p>
+        <hr>
+        {% else %}
+        {% for episode in season.all_episodes %}
+        <div class="d-flex gap-2 w-100">
+            <div id="{{episode.id}}" class="position-relative" onmouseover="toggleWatchIcon(this)" onmouseout="toggleWatchIcon(this)">
+                <img src="{% static episode.img_path %}" height="160" class="position-static">
+                <div id="{{ episode.id }}-watch" class="d-none episode-watch-icon">
+                    <a href="{% url 'djangoflix:watch' content.id %}">
+                        <i class="fa-solid fa-circle-play"></i> Watch
+                    </a>
+                </div>
+            </div>
             <div class="d-flex flex-column gap-1 w-100">
                 <div class="d-flex justify-content-between">
                     <h2 class="fs-6">{{ episode.name }}</h2>
@@ -99,10 +119,10 @@
             </div>
         </div>
         <hr>
-    {% endfor %}
-    {% endif %}
-    {% endfor %}
+        {% endfor %}
+        {% endif %}
     </section>
+    {% endfor %}
 </section>
 
 {% endif %}
