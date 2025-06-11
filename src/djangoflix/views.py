@@ -173,7 +173,29 @@ def tv(request):
 
 
 def favorites(request):
-    return HttpResponse("Hello, Favorites!")
+    if not request.method == "GET":
+        return HttpResponseNotAllowed(["GET"])
+    try:
+        this_profile = Profile.get_one_profile_by_id(request.session["profile"])
+        if not this_profile:
+            raise Profile.DoesNotExist
+    # KeyError catches login skippers, DoesNotExist catches invalid session data
+    except (KeyError, Profile.DoesNotExist):
+        if not "account" in request.session:
+            return redirect(reverse_lazy("accounts:login"))
+        elif not "profile" in request.session:
+            return redirect(reverse_lazy("djangoflix:profiles"))
+        else:
+            return redirect(reverse_lazy("accounts:logout"))
+        
+    all_favorites = this_profile.favorites.all()
+
+    context = {
+        "favorites": all_favorites,
+        "origin": "Favorites",
+    }
+    
+    return render(request, "djangoflix/favorites.html", context)
 
 
 def search(request):
@@ -291,6 +313,8 @@ def favorite(request, id, origin, destination: str, action: str):
                     kwargs={"id": id, "origin": origin}
                 )
             )
+        case "favorites":
+            return redirect(reverse_lazy("djangoflix:favorites"))
         case _:
             print(f"\nMissing or invalid destination of {destination}\n")
             return HttpResponse("😒")

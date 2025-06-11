@@ -1,12 +1,15 @@
 {% extends "djangoflix/base.html" %}
 {% load static %}
 {% block content %}
+
 {% if origin == "Browse" %}
 <a href="{% url 'djangoflix:browse' %}" title="Back to Browse"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
 {% elif origin == "Movies" %}
 <a href="{% url 'djangoflix:movies' %}" title="Back to Movies"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
-{% else %}
+{% elif origin == "TV" %}
 <a href="{% url 'djangoflix:tv' %}" title="Back to TV"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
+{% else %}
+<a href="{% url 'djangoflix:favorites' %}" title="Back to Favorites"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
 {% endif %}
 
 <!-- no content found -->
@@ -24,7 +27,7 @@
 {% if favorite %}
 <form action="{% url 'djangoflix:favorite' content.id origin 'details' 'remove' %}" method="POST"
     class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
-    onclick="submitForm('favoriteFormA')"
+    onclick="submitForm(this)"
     id="favoriteFormA">
     {% csrf_token %}
     <i title="Unfavorite" class="fa-solid fa-heart"></i>
@@ -32,7 +35,7 @@
 {% else %}
 <form action="{% url 'djangoflix:favorite' content.id origin 'details' 'add' %}" method="POST"
     class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
-    onclick="submitForm('favoriteFormB')"
+    onclick="submitForm(this)"
     id="favoriteFormB">
     {% csrf_token %}
     <i title="Favorite" class="fa-regular fa-heart"></i>
@@ -59,7 +62,7 @@
 {% if favorite %}
 <form action="{% url 'djangoflix:favorite' content.id origin 'details' 'remove' %}" method="POST"
     class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
-    onclick="submitForm('favoriteFormA')"
+    onclick="submitForm(this)"
     id="favoriteFormA">
     {% csrf_token %}
     <i title="Unfavorite" class="fa-solid fa-heart"></i>
@@ -67,7 +70,7 @@
 {% else %}
 <form action="{% url 'djangoflix:favorite' content.id origin 'details' 'add' %}" method="POST"
     class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
-    onclick="submitForm('favoriteFormB')"
+    onclick="submitForm(this)"
     id="favoriteFormB">
     {% csrf_token %}
     <i title="Favorite" class="fa-regular fa-heart"></i>

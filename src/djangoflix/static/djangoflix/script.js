@@ -65,9 +65,12 @@ function toggleProfileForm(focus) {
 }
 
 
-function submitForm(formId) {
-    const profileForm = document.getElementById(formId);
-    profileForm.submit();
+function submitForm(form) {
+    console.log(form);
+    // let formId = form.getAttribute("id");
+    // const profileForm = document.getElementById(formId);
+    form.submit();
+    // profileForm.submit();
 }
 
 
@@ -96,7 +99,7 @@ function selectIcon(selectedIconBtn) {
 }
 
 // toggle show/hide watch & view content icons on hover
-function toggleIcons(elem) {
+function toggleIcons(elem, favorite=false) {
     // if image is clipped, do nothing
     if (
         elem.getBoundingClientRect().right > 
@@ -106,10 +109,15 @@ function toggleIcons(elem) {
     ) {
         return;
     }
-    const watchEl = document.getElementById(elem.getAttribute("id") + "-watch");
-    const viewEl = document.getElementById(elem.getAttribute("id") + "-view");
+    const elemId = elem.getAttribute("id");
+    const watchEl = document.getElementById(elemId + "-watch");
+    const viewEl = document.getElementById(elemId + "-view");
     watchEl.classList.toggle("d-none");
     viewEl.classList.toggle("d-none");
+    if (favorite) {
+        const faveEl = document.getElementById(elemId + "-remove");
+        faveEl.classList.toggle("d-none");
+    }
 }
 
 //toggle favorite

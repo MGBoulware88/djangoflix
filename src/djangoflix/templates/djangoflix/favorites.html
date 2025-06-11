@@ -1,0 +1,39 @@
+{% extends "djangoflix/base.html" %}
+{% load static %}
+{% block content %}
+
+<h1 class="px-3 text-primary">Favorites</h1>
+<section class="d-flex flex-wrap justify-content-start align-content-center gap-1 px-3 py-3">
+    {% for favorite in favorites %}
+    <div id="{{ favorite.id }}" class="position-relative content-tile" onmouseover="toggleIcons(this, true)" onmouseout="toggleIcons(this, true)">
+        <img src="{% static favorite.img_path %}" width="145" class="position-static">
+        <div id="{{ favorite.id }}-watch" class="d-none watch-icon-container">
+            <a href="{% url 'djangoflix:watch' favorite.id origin %}">
+                <i class="fa-solid fa-circle-play"></i> Watch
+            </a>
+        </div>
+        <div id="{{ favorite.id }}-view" class="d-none details-icon-container">
+            <a href="{% url 'djangoflix:details' favorite.id origin %}">
+                <i class="fa-solid fa-eye"></i> Details
+            </a>
+        </div>
+        <form action="{% url 'djangoflix:favorite' favorite.id origin 'favorites' 'remove' %}" method="POST"
+            class="clickable text-primary"
+            onclick="submitForm(this)"
+            id="favoriteForm{{ favorite.id }}">
+            {% csrf_token %}
+            <div id="{{ favorite.id }}-remove" class="d-none favorite-icon-container">
+                <i class="fa-solid fa-heart"></i> Remove
+            </div>
+        </form>
+    </div>
+    {% endfor %}
+</section>
+<hr>
+<section class="d-flex justify-content-between align-content-center gap-1 mt-3 ms-3 quick-links">
+    <a href="{% url 'djangoflix:home' %}"><button class="btn btn-success"><i class="fa-solid fa-house"></i> Home</button></a>
+    <a href="{% url 'djangoflix:movies' %}"><button class="btn btn-primary"><i class="fa-solid fa-film"></i> Movies</button></a>
+    <a href="{% url 'djangoflix:tv' %}"><button class="orange-btn"><i class="fa-solid fa-tv"></i> TV</button></a>  
+</section>
+
+{% endblock %}

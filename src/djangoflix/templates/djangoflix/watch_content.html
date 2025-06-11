@@ -1,12 +1,22 @@
 {% extends "djangoflix/base.html" %}
 {% block content %}
-<a href="{% url 'djangoflix:details' content.id origin %}" title="Back to Details"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
+
+{% if origin == "Browse" %}
+<a href="{% url 'djangoflix:browse' %}" title="Back to Browse"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
+{% elif origin == "Movies" %}
+<a href="{% url 'djangoflix:movies' %}" title="Back to Movies"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
+{% elif origin == "TV" %}
+<a href="{% url 'djangoflix:tv' %}" title="Back to TV"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
+{% else %}
+<a href="{% url 'djangoflix:favorites' %}" title="Back to Favorites"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
+{% endif %}
+
 <section class="d-inline ms-2">
     <p class="fs-4 d-inline">Thanks for watching <span class="fw-bold">{{ content.name }}</span>! 🤠</p>
     {% if favorite %}
     <form action="{% url 'djangoflix:favorite' content.id origin 'watch' 'remove' %}" method="POST"
         class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
-        onclick="submitForm('favoriteFormA')"
+        onclick="submitForm(this)"
         id="favoriteFormA">
         {% csrf_token %}
         <i title="Unfavorite" class="fa-solid fa-heart"></i>
@@ -14,7 +24,7 @@
     {% else %}
     <form action="{% url 'djangoflix:favorite' content.id origin 'watch' 'add' %}" method="POST"
         class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
-        onclick="submitForm('favoriteFormB')"
+        onclick="submitForm(this)"
         id="favoriteFormB">
         {% csrf_token %}
         <i title="Favorite" class="fa-regular fa-heart"></i>
