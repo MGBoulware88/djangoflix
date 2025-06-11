@@ -1,7 +1,13 @@
 {% extends "djangoflix/base.html" %}
 {% load static %}
 {% block content %}
-<a href="javascript:history.go(-1)" title="Go Back"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
+{% if origin == "Browse" %}
+<a href="{% url 'djangoflix:browse' %}" title="Back to Browse"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
+{% elif origin == "Movies" %}
+<a href="{% url 'djangoflix:movies' %}" title="Back to Movies"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
+{% else %}
+<a href="{% url 'djangoflix:tv' %}" title="Back to TV"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
+{% endif %}
 
 <!-- no content found -->
 {% if content == None %}
@@ -16,7 +22,7 @@
 {% elif content.content_type == "Movie" %}
 <h1 class="text-nowrap d-inline ps-3">{{ content.name }}</h1>
 {% if favorite %}
-<form action="{% url 'djangoflix:favorite' content.id 'details' 'remove' %}" method="POST"
+<form action="{% url 'djangoflix:favorite' content.id origin 'details' 'remove' %}" method="POST"
     class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
     onclick="submitForm('favoriteFormA')"
     id="favoriteFormA">
@@ -24,7 +30,7 @@
     <i title="Unfavorite" class="fa-solid fa-heart"></i>
 </form>
 {% else %}
-<form action="{% url 'djangoflix:favorite' content.id 'details' 'add' %}" method="POST"
+<form action="{% url 'djangoflix:favorite' content.id origin 'details' 'add' %}" method="POST"
     class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
     onclick="submitForm('favoriteFormB')"
     id="favoriteFormB">
@@ -42,7 +48,7 @@
     </div>
 </section>
 <div class="d-flex ms-5 mt-2 watch-movie">
-    <a href="{% url 'djangoflix:watch' content.id %}">
+    <a href="{% url 'djangoflix:watch' content.id origin %}">
         <button class="btn btn-primary flex-grow-1"><i class="fa-solid fa-circle-play"></i> Watch</button>
     </a>
 </div>
@@ -51,7 +57,7 @@
 {% else %} <!-- content_type == "TV" -->
 <h1 class="text-nowrap d-inline ps-3">{{ content.name }}</h1>
 {% if favorite %}
-<form action="{% url 'djangoflix:favorite' content.id 'details' 'remove' %}" method="POST"
+<form action="{% url 'djangoflix:favorite' content.id origin 'details' 'remove' %}" method="POST"
     class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
     onclick="submitForm('favoriteFormA')"
     id="favoriteFormA">
@@ -59,7 +65,7 @@
     <i title="Unfavorite" class="fa-solid fa-heart"></i>
 </form>
 {% else %}
-<form action="{% url 'djangoflix:favorite' content.id 'details' 'add' %}" method="POST"
+<form action="{% url 'djangoflix:favorite' content.id origin 'details' 'add' %}" method="POST"
     class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
     onclick="submitForm('favoriteFormB')"
     id="favoriteFormB">
@@ -105,7 +111,7 @@
             <div id="{{episode.id}}" class="position-relative" onmouseover="toggleWatchIcon(this)" onmouseout="toggleWatchIcon(this)">
                 <img src="{% static episode.img_path %}" height="160" class="position-static">
                 <div id="{{ episode.id }}-watch" class="d-none episode-watch-icon">
-                    <a href="{% url 'djangoflix:watch' content.id %}">
+                    <a href="{% url 'djangoflix:watch' content.id origin %}">
                         <i class="fa-solid fa-circle-play"></i> Watch
                     </a>
                 </div>
@@ -130,7 +136,7 @@
 <section class="d-flex justify-content-between align-content-center gap-1 mt-3 ms-5 quick-links">
     <a href="{% url 'djangoflix:home' %}"><button class="btn btn-success"><i class="fa-solid fa-house"></i> Home</button></a>
     <a href="{% url 'djangoflix:movies' %}"><button class="btn btn-primary"><i class="fa-solid fa-film"></i> Movies</button></a>
-    <a href="{% url 'djangoflix:tv' %}"><button class="btn orange-btn"><i class="fa-solid fa-tv"></i> TV</button></a>  
+    <a href="{% url 'djangoflix:tv' %}"><button class="orange-btn"><i class="fa-solid fa-tv"></i> TV</button></a>  
 </section>
 
 {% endblock %}

@@ -1,6 +1,26 @@
 {% extends "djangoflix/base.html" %}
 {% block content %}
-<p class="fs-4">Thanks for watching <span class="fw-bold">{{ content.name }}</span>! 🤠</p>
+<a href="{% url 'djangoflix:details' content.id origin %}" title="Back to Details"><i class="back-arrow fa-solid fa-chevron-left"></i></a>
+<section class="d-inline ms-2">
+    <p class="fs-4 d-inline">Thanks for watching <span class="fw-bold">{{ content.name }}</span>! 🤠</p>
+    {% if favorite %}
+    <form action="{% url 'djangoflix:favorite' content.id origin 'watch' 'remove' %}" method="POST"
+        class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
+        onclick="submitForm('favoriteFormA')"
+        id="favoriteFormA">
+        {% csrf_token %}
+        <i title="Unfavorite" class="fa-solid fa-heart"></i>
+    </form>
+    {% else %}
+    <form action="{% url 'djangoflix:favorite' content.id origin 'watch' 'add' %}" method="POST"
+        class="d-inline-flex flex-column ps-2 fs-3 text-danger clickable"
+        onclick="submitForm('favoriteFormB')"
+        id="favoriteFormB">
+        {% csrf_token %}
+        <i title="Favorite" class="fa-regular fa-heart"></i>
+    </form>
+    {% endif %}
+</section>
 <hr>
 <section class="d-flex justify-content-between align-content-center gap-1 mt-3 quick-links">
     <a href="{% url 'djangoflix:home' %}"><button class="btn btn-success"><i class="fa-solid fa-house"></i> Home</button></a>

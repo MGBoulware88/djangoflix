@@ -116,6 +116,7 @@ def browse(request):
         
     all_content = WatchableContent.get_all_content()
     context = _get_context(all_content)
+    context["origin"] = "Browse"
     
     
     return render(request, "djangoflix/view_content.html", context)
@@ -141,6 +142,7 @@ def movies(request):
         
     all_content = WatchableContent.get_all_movies()
     context = _get_context(all_content)
+    context["origin"] = "Movies"
     
     return render(request, "djangoflix/view_content.html", context)
 
@@ -165,6 +167,7 @@ def tv(request):
         
     all_content = WatchableContent.get_all_tv()
     context = _get_context(all_content)
+    context["origin"] = "TV"
     
     return render(request, "djangoflix/view_content.html", context)
 
@@ -177,7 +180,7 @@ def search(request):
     return HttpResponse("Hello, search!")
 
 
-def details(request, id):
+def details(request, id, origin):
     if not request.method == "GET":
         return HttpResponseNotAllowed(["GET"])
     try:
@@ -195,8 +198,7 @@ def details(request, id):
     
     this_content = WatchableContent.get_one_content_by_id(id)
     
-    profile = Profile.get_one_profile_by_id(request.session["profile"])
-    if this_content in profile.favorites.all():
+    if this_content in this_profile.favorites.all():
         favorite = True
     else:
         favorite = False
@@ -219,6 +221,7 @@ def details(request, id):
 
     context = {
         "content": this_content,
+        "origin": origin,
         "genres": genres,
         "favorite": favorite,
         "seasons": seasons,
@@ -227,7 +230,7 @@ def details(request, id):
     return render(request, "djangoflix/view_details.html", context)
 
 
-def watch(request, id):
+def watch(request, id, origin):
     if not request.method == "GET":
         return HttpResponseNotAllowed(["GET"])
     try:
@@ -244,12 +247,22 @@ def watch(request, id):
             return redirect(reverse_lazy("accounts:logout"))
         
     this_content = WatchableContent.get_one_content_by_id(id)
-    context = {"content": this_content}
+
+    if this_content in this_profile.favorites.all():
+        favorite = True
+    else:
+        favorite = False
+    
+    context = {
+        "content": this_content,
+        "origin": origin,
+        "favorite": favorite,
+    }
 
     return render(request, "djangoflix/watch_content.html", context)
 
 
-def favorite(request, id, destination: str, action: str):
+def favorite(request, id, origin, destination: str, action: str):
     if not request.method == "POST":
         return HttpResponseNotAllowed(["POST"])
     
@@ -267,9 +280,17 @@ def favorite(request, id, destination: str, action: str):
     # All views that allow favoriting content
     match destination:
         case "details":
-            return redirect(reverse_lazy("djangoflix:details", kwargs={"id": id}))
+            return redirect(reverse_lazy(
+                    "djangoflix:details",
+                    kwargs={"id": id, "origin": origin}
+                )
+            )
         case "watch":
-            return redirect(reverse_lazy("djangoflix:watch", kwargs={"id": id}))
+            return redirect(reverse_lazy(
+                    "djangoflix:watch",
+                    kwargs={"id": id, "origin": origin}
+                )
+            )
         case _:
             print(f"\nMissing or invalid destination of {destination}\n")
             return HttpResponse("😒")

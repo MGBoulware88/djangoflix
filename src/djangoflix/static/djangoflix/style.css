@@ -69,10 +69,26 @@
     padding: 7px 12px;
 }
 
-.orange-btn {
+.orange-btn,
+.orange-btn:link,
+.orange-btn:visited {
   background-color: #f57c02;
   color: #fafafa;
   border-color: #f57c02;
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.75rem;
+}
+
+.orange-btn:hover {
+  background-color: #c05e02;
+  color: #fafafa;
+  border-color: #c05e02;
+}
+
+.orange-btn:active {
+  background-color: #8b4400;
+  color: #fafafa;
+  border-color: #8b4400;
 }
 
 .watch-movie {

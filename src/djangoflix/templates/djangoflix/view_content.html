@@ -12,12 +12,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="action{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="action{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -37,12 +37,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="comedy{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="comedy{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -62,12 +62,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="drama{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="drama{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -87,12 +87,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="scifi{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="scifi{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -112,12 +112,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="thriller{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="thriller{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -137,12 +137,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="adventure{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="adventure{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -162,12 +162,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="animated{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="animated{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -187,12 +187,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="crime{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="crime{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -212,12 +212,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="fantasy{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="fantasy{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -237,12 +237,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="family{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="family{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -262,12 +262,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="kids{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="kids{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -287,12 +287,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="horror{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="horror{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -312,12 +312,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="mystery{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="mystery{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -337,12 +337,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="romance{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="romance{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -362,12 +362,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="tv_movie{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="tv_movie{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -387,12 +387,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="war{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="war{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -412,12 +412,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="history{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="history{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -437,12 +437,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="documentary{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="documentary{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
@@ -462,12 +462,12 @@
                 <div class="position-relative">
                     <img src="{% static content.img_path %}" width="145" class="position-static">
                     <div id="reality{{ content.id }}-watch" class="d-none watch-icon-container">
-                        <a href="{% url 'djangoflix:watch' content.id %}">
+                        <a href="{% url 'djangoflix:watch' content.id origin %}">
                             <i class="fa-solid fa-circle-play"></i> Watch
                         </a>
                     </div>
                     <div id="reality{{ content.id }}-view" class="d-none details-icon-container">
-                        <a href="{% url 'djangoflix:details' content.id %}">
+                        <a href="{% url 'djangoflix:details' content.id origin %}">
                             <i class="fa-solid fa-eye"></i> Details
                         </a>
                     </div>
