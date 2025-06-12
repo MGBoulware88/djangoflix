@@ -115,7 +115,7 @@ def browse(request):
             return redirect(reverse_lazy("accounts:logout"))
         
     all_content = WatchableContent.get_all_content()
-    context = _get_context(all_content)
+    context = WatchableContent.get_context(all_content)
     context["origin"] = "Browse"
     
     
@@ -141,7 +141,7 @@ def movies(request):
             return redirect(reverse_lazy("accounts:logout"))
         
     all_content = WatchableContent.get_all_movies()
-    context = _get_context(all_content)
+    context = WatchableContent.get_context(all_content)
     context["origin"] = "Movies"
     
     return render(request, "djangoflix/view_content.html", context)
@@ -166,7 +166,7 @@ def tv(request):
             return redirect(reverse_lazy("accounts:logout"))
         
     all_content = WatchableContent.get_all_tv()
-    context = _get_context(all_content)
+    context = WatchableContent.get_context(all_content)
     context["origin"] = "TV"
     
     return render(request, "djangoflix/view_content.html", context)
@@ -233,13 +233,10 @@ def details(request, id, origin):
     
     seasons = []
     if this_content.content_type == "TV":
-        this_content.all_seasons = this_content.seasons.all()
-        for season in this_content.all_seasons:
-            episodes = season.episodes.all()
-            season.all_episodes = []
+        all_seasons = this_content.get_current_seasons()
+        for season in all_seasons:
+            season.all_episodes = season.get_current_episodes()
             seasons.append(season)
-            for episode in episodes:
-                season.all_episodes.append(episode)
 
     context = {
         "content": this_content,
@@ -318,106 +315,3 @@ def favorite(request, id, origin, destination: str, action: str):
         case _:
             print(f"\nMissing or invalid destination of {destination}\n")
             return HttpResponse("😒")
-
-### Consolidation function for browse, movies, & tv
-def _get_context(all_content) -> dict:
-    action = []
-    adventure = []
-    animated = []
-    comedy = []
-    crime = []
-    documentary = []
-    drama = []
-    family = []
-    fantasy = []
-    history = []
-    horror = []
-    kids = []
-    mystery = []
-    reality = []
-    romance = []
-    scifi = []
-    thriller = []
-    tv_movie = []
-    war = []
-    western = []
-
-    for content in all_content:
-        genres = content.genres.all()
-        for genre in genres:
-            match genre.name:
-                case "Action":
-                    action.append(content)
-                case "Action & Adventure":
-                    action.append(content)
-                    adventure.append(content)
-                case "Adventure":
-                    adventure.append(content)
-                case "Animation":
-                    animated.append(content)
-                case "Comedy":
-                    comedy.append(content)
-                case "Crime":
-                    crime.append(content)
-                case "Documentary":
-                    documentary.append(content)
-                case "Drama":
-                    drama.append(content)
-                case "Family":
-                    family.append(content)
-                case "Fantasy":
-                    fantasy.append(content)
-                case "History":
-                    history.append(content)
-                case "Horror":
-                    horror.append(content)
-                case "Kids":
-                    kids.append(content)
-                case "Mystery":
-                    mystery.append(content)
-                case "Reality":
-                    reality.append(content)
-                case "Romance":
-                    romance.append(content)
-                case "Science Fiction":
-                    scifi.append(content)
-                case "Sci-Fi & Fantasy":
-                    scifi.append(content)
-                    fantasy.append(content)
-                case "Thriller":
-                    thriller.append(content)
-                case "TV Movie":
-                    tv_movie.append(content)
-                case "War":
-                    war.append(content)
-                case "War & Politics":
-                    war.append(content)
-                case "Western":
-                    western.append(content)
-                case _:
-                    #print(f"\nUnmapped genre name: {genre.name}\n")
-                    continue
-
-    context = {
-        "action": action,
-        "adventure": adventure,
-        "animated": animated,
-        "comedy": comedy,
-        "crime": crime,
-        "documentary": documentary,
-        "drama": drama,
-        "family": family,
-        "fantasy": fantasy,
-        "history": history,
-        "horror": horror,
-        "kids": kids,
-        "mystery": mystery,
-        "reality": reality,
-        "romance": romance,
-        "scifi": scifi,
-        "thriller": thriller,
-        "tv_movie": tv_movie,
-        "war": war,
-    }
-
-    return context

@@ -62,6 +62,122 @@ class WatchableContent(ContentData):
         return self.content_type == "TV"
 
 
+    def get_current_seasons(self):
+        if not self.is_tv():
+            return None
+        
+        try:
+            seasons = self.seasons.filter(air_date__lte=timezone.now())
+            return seasons
+
+        except Exception as e:
+            print(f"\nget_current_seasons for {self.name} failed with error:\n{e}\n")
+            return None
+    
+    
+    @classmethod
+    def get_context(cls, all_content) -> dict:
+        action = []
+        adventure = []
+        animated = []
+        comedy = []
+        crime = []
+        documentary = []
+        drama = []
+        family = []
+        fantasy = []
+        history = []
+        horror = []
+        kids = []
+        mystery = []
+        reality = []
+        romance = []
+        scifi = []
+        thriller = []
+        tv_movie = []
+        war = []
+        western = []
+
+        for content in all_content:
+            genres = content.genres.all()
+            for genre in genres:
+                match genre.name:
+                    case "Action":
+                        action.append(content)
+                    case "Action & Adventure":
+                        action.append(content)
+                        adventure.append(content)
+                    case "Adventure":
+                        adventure.append(content)
+                    case "Animation":
+                        animated.append(content)
+                    case "Comedy":
+                        comedy.append(content)
+                    case "Crime":
+                        crime.append(content)
+                    case "Documentary":
+                        documentary.append(content)
+                    case "Drama":
+                        drama.append(content)
+                    case "Family":
+                        family.append(content)
+                    case "Fantasy":
+                        fantasy.append(content)
+                    case "History":
+                        history.append(content)
+                    case "Horror":
+                        horror.append(content)
+                    case "Kids":
+                        kids.append(content)
+                    case "Mystery":
+                        mystery.append(content)
+                    case "Reality":
+                        reality.append(content)
+                    case "Romance":
+                        romance.append(content)
+                    case "Science Fiction":
+                        scifi.append(content)
+                    case "Sci-Fi & Fantasy":
+                        scifi.append(content)
+                        fantasy.append(content)
+                    case "Thriller":
+                        thriller.append(content)
+                    case "TV Movie":
+                        tv_movie.append(content)
+                    case "War":
+                        war.append(content)
+                    case "War & Politics":
+                        war.append(content)
+                    case "Western":
+                        western.append(content)
+                    case _:
+                        continue
+
+        context = {
+            "action": action,
+            "adventure": adventure,
+            "animated": animated,
+            "comedy": comedy,
+            "crime": crime,
+            "documentary": documentary,
+            "drama": drama,
+            "family": family,
+            "fantasy": fantasy,
+            "history": history,
+            "horror": horror,
+            "kids": kids,
+            "mystery": mystery,
+            "reality": reality,
+            "romance": romance,
+            "scifi": scifi,
+            "thriller": thriller,
+            "tv_movie": tv_movie,
+            "war": war,
+        }
+
+        return context
+    
+    
     @classmethod
     def get_all_content(cls):
         try:
@@ -164,6 +280,18 @@ class TVSeason(ContentData):
 
         except TypeError:
             print(f"\ncontent_type of {series} is not 'TV'\n")
+    
+
+    def get_current_episodes(self):
+        try:
+            episodes = self.episodes.filter(air_date__lte=timezone.now())
+            
+            return episodes
+        
+        except Exception as e:
+            print(f"\nget_episodes for {self.series.name}:{self.name}\
+                   failed with error:\n{e}\n")
+            return []
     
 
     @classmethod
@@ -309,18 +437,14 @@ class Profile(SharedData):
     ### Profile instance methods et all
     def get_favorites(self):
         try:
-            favorites = []
-            queryset = self.favorites.all()
+            favorites = self.favorites.all()
             # From Django docs, count() definition:
             # '. . .you should always use count() rather than loading all of
             # the record into Python objects and calling len() on the result 
             # (unless you need to load the objects into memory anyway, 
             # in which case len() will be faster).'
-            if len(queryset) == 0:
+            if len(favorites) == 0:
                 return None
-            # TODO: Test if this loop is redundant and I can just return the queryset after len() call
-            for favorite in queryset:
-                favorites.append(favorite)
             
             return favorites
         except Exception as e:
