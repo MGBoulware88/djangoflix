@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseNotAllowed
+import ast
 
 from accounts.forms import ProfileForm
-from .models import Account, Profile, WatchableContent, TVEpisode
+from .models import Account, Profile, WatchableContent
+from .forms import SearchForm
 
 
 ### landing, pre-login/reg to djangoflix/
@@ -198,8 +200,90 @@ def favorites(request):
     return render(request, "djangoflix/favorites.html", context)
 
 
+### Search Form view
 def search(request):
-    return HttpResponse("Hello, search!")
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if not search_form.is_valid():
+            print(f"\n\nInvalid Search Form!\n\n")
+            return render(
+                request,
+                "djangoflix/search.html",
+                context={"form": search_form}
+            )
+        # If form is valid, perform the search
+        if not search_form.cleaned_data["title_search"] == "":
+            title = search_form.cleaned_data["title_search"]
+        else: title = "" 
+        if not search_form.cleaned_data["genre_filter"] == []:
+            genres = search_form.cleaned_data["genre_filter"]
+        else: genres = []
+
+        # Save form data for results view
+        request.session["form_data"] = {
+            "title_search": search_form.cleaned_data["title_search"],
+            "genre_filter": search_form.cleaned_data["genre_filter"],
+        }
+
+        return redirect(f"/djangoflix/results/?title={title}&genres={genres}")
+    
+    if not request.method == "GET":
+        return HttpResponseNotAllowed(["GET", "POST"])
+    try:
+        this_profile = Profile.get_one_profile_by_id(request.session["profile"])
+        if not this_profile:
+            raise Profile.DoesNotExist
+    # KeyError catches login skippers, DoesNotExist catches invalid session data
+    except (KeyError, Profile.DoesNotExist):
+        if not "account" in request.session:
+            return redirect(reverse_lazy("accounts:login"))
+        elif not "profile" in request.session:
+            return redirect(reverse_lazy("djangoflix:profiles"))
+        else:
+            return redirect(reverse_lazy("accounts:logout"))
+        
+    search_form = SearchForm()
+
+    context = {"form": search_form}
+
+    return render(request, "djangoflix/search.html", context)
+
+
+### Search results view
+def results(request):
+    if not request.method == "GET":
+        return HttpResponseNotAllowed(["GET"])
+    try:
+        this_profile = Profile.get_one_profile_by_id(request.session["profile"])
+        if not this_profile:
+            raise Profile.DoesNotExist
+    # KeyError catches login skippers, DoesNotExist catches invalid session data
+    except (KeyError, Profile.DoesNotExist):
+        if not "account" in request.session:
+            return redirect(reverse_lazy("accounts:login"))
+        elif not "profile" in request.session:
+            return redirect(reverse_lazy("djangoflix:profiles"))
+        else:
+            return redirect(reverse_lazy("accounts:logout"))
+    
+    search_form = SearchForm(initial=request.session["form_data"])
+    title = request.GET.get("title")
+    genres_list = ast.literal_eval(request.GET.get("genres"))
+    params = {}
+    if title:
+        params["title"] = title
+    if genres_list:
+        params["genres"] = genres_list
+    print(f"\nSearch Params: {params}")
+    search_results = WatchableContent.get_all_content_matching_search(params)
+    print(f"\nSearch Results:\n{search_results}")
+    context = {
+        "form": search_form,
+        "results": search_results
+    }
+
+    return render(request, "djangoflix/search.html", context)
+
 
 
 def details(request, id, origin):

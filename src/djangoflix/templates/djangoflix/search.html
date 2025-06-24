@@ -2,9 +2,50 @@
 {% load static %}
 {% block content %}
 
-<container>
-    <!-- Search options form -->
+<container class="d-flex gap-2 h-100">
+    <section class="border-end border-bottom px-3 pb-3">
+        <!-- Search options form -->
+        <form action="{% url 'djangoflix:search' %}" method="POST">
+            {% csrf_token %}
+            <div class="d-flex flex-column gap-1 justify-content-start">
+            {% if form.non_field_errors %}
+                <span class="text-danger fs-6">{{ form.non_field_errors }}</span>
+            {% endif %}
 
+            {% for field in form.visible_fields %}
+                <span class="fs-5 mb-0 text-primary">{{ field.label_tag }}</span>
+                {{ field }}
+            {% endfor %}
+            </div>
+            <div class="d-flex justify-content-end mt-2">
+                <button type="submit" class="btn btn-success">Search</button>        
+            </div>
+        </form>
+    </section>
+    <!-- Search results -->
+    {% if not results %}
+    <h1 class="fs-2 text-nowrap">Enter search parameters to start 🤠</h1>
+    {% else %}
+    <section class="d-flex flex-wrap justify-content-start align-content-start gap-1 px-3 py-3">
+    {% for content in results %}
+        <div id="action{{ content.id }}" class="content-tile" onmouseover="toggleIcons(this)" onmouseout="toggleIcons(this)">
+            <div class="position-relative">
+                <img src="{% static content.img_path %}" width="145" class="position-static">
+                <div id="action{{ content.id }}-watch" class="d-none watch-icon-container">
+                    <a href="{% url 'djangoflix:watch' content.id 'Browse' %}">
+                        <i class="fa-solid fa-circle-play"></i> Watch
+                    </a>
+                </div>
+                <div id="action{{ content.id }}-view" class="d-none details-icon-container">
+                    <a href="{% url 'djangoflix:details' content.id 'Browse' %}">
+                        <i class="fa-solid fa-eye"></i> Details
+                    </a>
+                </div>
+            </div>
+        </div> 
+    {% endfor %}
+    </section>
+    {% endif %}
 </container>
 
 {% endblock %}

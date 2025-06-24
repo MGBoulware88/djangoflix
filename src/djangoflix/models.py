@@ -220,6 +220,30 @@ class WatchableContent(ContentData):
     
     
     @classmethod
+    def get_all_content_matching_search(cls, params: dict):
+        if "genres" in params:
+            from tmdb.models import Genre
+            search_genres = []
+            for genre in params["genres"]:
+                try:
+                    this_genre = Genre.objects.get(pk=int(genre))
+                    search_genres.append(this_genre)
+                except Genre.DoesNotExist:
+                    print(f"\nMissing Genre w/ ID {genre}\n")
+                    continue
+            if "title" in params:
+                return cls.objects.filter(name__icontains=params["title"])\
+                                  .filter(genres__in=search_genres)
+            else:
+                return cls.objects.filter(genres__in=search_genres)
+        elif "title" in params:
+            return cls.objects.filter(name__icontains=params["title"])
+        else:
+            # No params
+            return False
+    
+    
+    @classmethod
     def get_one_content_by_id(cls, id):
         try:
             content = cls.objects.get(pk=id)
